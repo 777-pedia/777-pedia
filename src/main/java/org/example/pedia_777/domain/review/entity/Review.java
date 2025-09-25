@@ -22,7 +22,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Entity
 @NoArgsConstructor
 @Getter
-
 public class Review extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
