@@ -10,9 +10,10 @@ import lombok.RequiredArgsConstructor;
 public enum SuccessCode {
 
 	// Common Success
-	REQUEST_SUCCESS(HttpStatus.OK, "요청이 성공적으로 처리되었습니다.");
+	REQUEST_SUCCESS(HttpStatus.OK, "요청이 성공적으로 처리되었습니다."),
 
 	//Member Success
+	SIGNUP_SUCCESS(HttpStatus.OK, "회원가입이 성공적으로 처리되었습니다.");
 
 	//heart Success
 
