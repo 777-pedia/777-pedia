@@ -1,27 +1,28 @@
 package org.example.pedia_777.domain.review.dto.response;
 
 import java.time.LocalDateTime;
-import lombok.Getter;
+import org.example.pedia_777.domain.review.entity.Review;
 
-@Getter
-public class ReviewResponse {
-
-    private final Long id;
-    //private final String nickname; User 에서 받아와야 한다
-    private final double star;
-    private final String comment;
-    private final Long likeCount;
-    private final LocalDateTime createdAt;
-
-
-    public static ReviewResponse of(
-            Long id,
-            double star,
-            String comment,
-            Long likeCount,
-            LocalDateTime createdAt
-    ) {
-        return new ReviewResponse(id, star, comment, likeCount, createdAt);
+public record ReviewResponse(
+        Long id,
+        String comment,
+        double star,
+        Long likeCount,
+        Long movieId,
+        Long memberId,
+        LocalDateTime updatedAt,
+        LocalDateTime deletedAt
+) {
+    public static ReviewResponse from(Review review) {
+        return new ReviewResponse(
+                review.getId(),
+                review.getComment(),
+                review.getStar(),
+                review.getLikeCount(),
+                review.getMovies().getId(),
+                review.getMembers().getId(),
+                review.getUpdatedAt(),
+                review.getDeletedAt()
+        );
     }
-
 }
