@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import lombok.Builder;
 
 @Builder
-public record AuthUser(
+public record AuthMember(
 	Long id,
 	String email,
 	String nickname) {

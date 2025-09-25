@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.example.pedia_777.common.dto.AuthUser;
+import org.example.pedia_777.common.dto.AuthMember;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -78,12 +78,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	}
 
 	private void setAuthentication(Claims claims) {
-		Long userId = Long.valueOf(claims.getSubject());
+		Long memberId = Long.valueOf(claims.getSubject());
 		String email = claims.get("email", String.class);
 
 		String nickname = claims.get("nickname", String.class);
 
-		AuthUser authUser = new AuthUser(userId, email, nickname);
+		AuthMember authUser = new AuthMember(memberId, email, nickname);
 		Authentication authenticationToken = new JwtAuthenticationToken(authUser);
 		SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 	}
