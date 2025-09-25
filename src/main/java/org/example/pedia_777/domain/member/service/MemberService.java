@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class MemberService {
+public class MemberService implements MemberServiceApi {
 
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
@@ -44,6 +44,7 @@ public class MemberService {
 		}
 	}
 
+	@Override
 	public Members findMemberById(Long memberId) {
 		return memberRepository.findById(memberId).orElseThrow(
 			() -> new BusinessException(ErrorCode.NOT_FOUND_MEMBER));
