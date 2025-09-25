@@ -7,6 +7,7 @@ on:
 permissions:
   pull-requests: write
 
+jobs:
   assign:
     runs-on: ubuntu-latest
     steps:
