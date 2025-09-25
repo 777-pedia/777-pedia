@@ -20,7 +20,8 @@ public enum ErrorCode {
 
 	//Member error
 	EMAIL_DUPLICATED(HttpStatus.BAD_REQUEST, "중복된 이메일입니다."),
-	NICKNAME_DUPLICATED(HttpStatus.BAD_REQUEST, "중복된 닉네임입니다.");
+	NICKNAME_DUPLICATED(HttpStatus.BAD_REQUEST, "중복된 닉네임입니다."),
+	NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다.");
 
 	//heart error
 

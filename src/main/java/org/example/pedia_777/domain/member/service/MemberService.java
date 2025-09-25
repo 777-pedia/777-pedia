@@ -43,4 +43,9 @@ public class MemberService {
 			throw new BusinessException(ErrorCode.EMAIL_DUPLICATED);
 		}
 	}
+
+	public Members findMemberById(Long memberId) {
+		return memberRepository.findById(memberId).orElseThrow(
+			() -> new BusinessException(ErrorCode.NOT_FOUND_MEMBER));
+	}
 }
