@@ -1,6 +1,6 @@
 spring:
   application:
-    name: dev-log
+    name: pedia_777
 
   profiles:
     active: local # 각자 로컬에서는 local 프로필을 사용하도록 기본값 설정
