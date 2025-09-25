@@ -16,7 +16,7 @@ permissions:
           actor="${{ github.actor }}"
 
           # 리뷰어 후보 (GitHub 아이디 사용)
-          reviewers=("doldollee00" "lby9906" "seonrizee" "youngrae0317" "SooHyun Park")
+          reviewers=("doldollee00" "lby9906" "seonrizee" "youngrae0317" "soo59599")
 
           # 작성자는 제외
           candidates=($(printf "%s\n" "${reviewers[@]}" | grep -v "$actor"))
