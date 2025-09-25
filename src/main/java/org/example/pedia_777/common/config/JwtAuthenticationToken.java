@@ -1,12 +1,12 @@
 package org.example.pedia_777.common.config;
 
-import org.example.pedia_777.common.dto.AuthUser;
+import org.example.pedia_777.common.dto.AuthMember;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
-	private final AuthUser authUser;
+	private final AuthMember authUser;
 
-	public JwtAuthenticationToken(AuthUser authUser) {
+	public JwtAuthenticationToken(AuthMember authUser) {
 		super(authUser.getAuthorities());
 		this.authUser = authUser;
 		setAuthenticated(true);
