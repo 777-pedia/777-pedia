@@ -18,9 +18,11 @@ import org.example.pedia_777.domain.member.entity.Members;
 import org.example.pedia_777.domain.movie.entity.Movies;
 import org.springframework.data.annotation.LastModifiedDate;
 
+
 @Entity
 @NoArgsConstructor
 @Getter
+
 public class Review extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
