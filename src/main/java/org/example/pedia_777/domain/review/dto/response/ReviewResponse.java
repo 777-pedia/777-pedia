@@ -10,6 +10,7 @@ public record ReviewResponse(
         Long likeCount,
         Long movieId,
         Long memberId,
+        String memberNickname,
         LocalDateTime updatedAt,
         LocalDateTime deletedAt
 ) {
@@ -21,6 +22,7 @@ public record ReviewResponse(
                 review.getLikeCount(),
                 review.getMovies().getId(),
                 review.getMembers().getId(),
+                review.getMembers().getNickname(),
                 review.getUpdatedAt(),
                 review.getDeletedAt()
         );

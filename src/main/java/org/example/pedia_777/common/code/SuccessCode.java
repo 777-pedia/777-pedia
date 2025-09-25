@@ -9,20 +9,21 @@ import org.springframework.http.HttpStatus;
 public enum SuccessCode {
 
 
-	  // common
-	  REQUEST_SUCCESS(HttpStatus.OK, "요청이 성공적으로 처리되었습니다."),
+    // common
+    REQUEST_SUCCESS(HttpStatus.OK, "요청이 성공적으로 처리되었습니다."),
 
-	  // member
-	  SIGNUP_SUCCESS(HttpStatus.OK, "회원가입이 성공적으로 처리되었습니다."),
-	  LOGIN_SUCCESS(HttpStatus.OK, "로그인이 완료되었습니다."),
+    // member
+    SIGNUP_SUCCESS(HttpStatus.OK, "회원가입이 성공적으로 처리되었습니다."),
+    LOGIN_SUCCESS(HttpStatus.OK, "로그인이 완료되었습니다."),
 
     // favorite
 
     // movie
 
     // review
-    REVIEW_SUCCESS(HttpStatus.OK, "리뷰 생성이 성공적으로 처리되었습니다.");
-  
+    REVIEW_SUCCESS(HttpStatus.OK, "리뷰 생성이 성공적으로 처리되었습니다."),
+    REVIEW_LIST_VIEWED(HttpStatus.OK, "리뷰 불러오기가 성공적으로 처리되었습니다.");
+
     // like
 
     // search history
