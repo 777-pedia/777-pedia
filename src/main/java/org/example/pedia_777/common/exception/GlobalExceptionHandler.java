@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
 	}
 
 	// @RequestParam, @PathVariable 유효성 검사 예외 처리
-	@ExceptionHandler(BusinessException.class)
+	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<GlobalApiResponse<Void>> handleConstraintViolationException(ConstraintViolationException e) {
 		String errorMessage = e.getConstraintViolations().stream()
 			.map(violation -> violation.getMessage())
