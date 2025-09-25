@@ -1,8 +1,11 @@
 package org.example.pedia_777.domain.member.service;
 
 import org.example.pedia_777.common.code.ErrorCode;
+import org.example.pedia_777.common.config.JwtUtil;
 import org.example.pedia_777.common.exception.BusinessException;
+import org.example.pedia_777.domain.member.dto.request.MemberLoginRequest;
 import org.example.pedia_777.domain.member.dto.request.MemberRequest;
+import org.example.pedia_777.domain.member.dto.response.MemberLoginResponse;
 import org.example.pedia_777.domain.member.dto.response.MemberResponse;
 import org.example.pedia_777.domain.member.entity.Members;
 import org.example.pedia_777.domain.member.repository.MemberRepository;
@@ -19,6 +22,7 @@ public class MemberService implements MemberServiceApi {
 
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final JwtUtil jwtUtil;
 
 	public MemberResponse signup(MemberRequest memberRequest) {
 		existsByEmail(memberRequest.email());
@@ -37,7 +41,6 @@ public class MemberService implements MemberServiceApi {
 		return MemberResponse.of(member.getId(), member.getEmail(), memberRequest.nickname(), member.getCreatedAt());
 	}
 
-	@Transactional(readOnly = true)
 	public void existsByEmail(String email) {
 		if (memberRepository.existsByEmail(email)) {
 			throw new BusinessException(ErrorCode.EMAIL_DUPLICATED);
@@ -45,8 +48,26 @@ public class MemberService implements MemberServiceApi {
 	}
 
 	@Override
+	public Members findMemberByEmail(String email) {
+		return memberRepository.findByEmail(email).orElseThrow(
+			() -> new BusinessException(ErrorCode.NOT_FOUND_MEMBER));
+	}
+
+	@Override
 	public Members findMemberById(Long memberId) {
 		return memberRepository.findById(memberId).orElseThrow(
 			() -> new BusinessException(ErrorCode.NOT_FOUND_MEMBER));
+	}
+
+	public MemberLoginResponse login(MemberLoginRequest memberLoginRequest) {
+		Members findMember = findMemberByEmail(memberLoginRequest.email());
+
+		if (!passwordEncoder.matches(memberLoginRequest.password(), findMember.getPassword())) {
+			throw new BusinessException(ErrorCode.NOT_FOUND_EMAIL_PASSWORD);
+		}
+
+		String bearerToken = jwtUtil.createToken(findMember.getId(), findMember.getEmail(), findMember.getNickname());
+
+		return MemberLoginResponse.of(bearerToken);
 	}
 }
