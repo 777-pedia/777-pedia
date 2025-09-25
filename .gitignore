@@ -43,3 +43,5 @@ out/
 
 ### 템플릿 파일은 무시하지 않음 ###
 !src/main/resources/application-local.yml.template
+
+docker-compose.test.yml

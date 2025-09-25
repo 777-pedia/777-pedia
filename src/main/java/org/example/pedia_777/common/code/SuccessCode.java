@@ -1,31 +1,32 @@
 package org.example.pedia_777.common.code;
 
-import org.springframework.http.HttpStatus;
-
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
 public enum SuccessCode {
 
-	// Common Success
-	REQUEST_SUCCESS(HttpStatus.OK, "요청이 성공적으로 처리되었습니다."),
 
-	//Member Success
-	SIGNUP_SUCCESS(HttpStatus.OK, "회원가입이 성공적으로 처리되었습니다."),
-	LOGIN_SUCCESS(HttpStatus.OK, "로그인이 완료되었습니다.");
+	  // common
+	  REQUEST_SUCCESS(HttpStatus.OK, "요청이 성공적으로 처리되었습니다."),
 
-	//heart Success
+	  // member
+	  SIGNUP_SUCCESS(HttpStatus.OK, "회원가입이 성공적으로 처리되었습니다."),
+	  LOGIN_SUCCESS(HttpStatus.OK, "로그인이 완료되었습니다."),
 
-	//movie Success
+    // favorite
 
-	//review Success
+    // movie
 
-	//like Success
+    // review
+    REVIEW_SUCCESS(HttpStatus.OK, "리뷰 생성이 성공적으로 처리되었습니다.");
+  
+    // like
 
-	//searchHistory Success
+    // search history
 
-	private final HttpStatus httpStatus;
-	private final String message;
+    private final HttpStatus httpStatus;
+    private final String message;
 }
