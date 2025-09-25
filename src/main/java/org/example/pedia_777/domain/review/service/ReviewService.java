@@ -1,6 +1,8 @@
 package org.example.pedia_777.domain.review.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.pedia_777.common.code.ErrorCode;
+import org.example.pedia_777.common.exception.BusinessException;
 import org.example.pedia_777.domain.member.entity.Members;
 import org.example.pedia_777.domain.member.service.MemberService;
 import org.example.pedia_777.domain.movie.entity.Movies;
@@ -14,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class ReviewService {
+public class ReviewService implements ReviewServiceApi {
 
     private final ReviewRepository reviewRepository;
     private final MemberService memberService;
@@ -36,5 +38,11 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(review);
 
         return ReviewResponse.from(savedReview);
+    }
+
+    @Override
+    public Review findReviewById(Long reviewId) {
+        return reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.REVIEW_NOT_FOUND));
     }
 }
