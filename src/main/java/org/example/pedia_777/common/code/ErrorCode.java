@@ -20,11 +20,12 @@ public enum ErrorCode {
 
 	//Member error
 	EMAIL_DUPLICATED(HttpStatus.BAD_REQUEST, "중복된 이메일입니다."),
-	NICKNAME_DUPLICATED(HttpStatus.BAD_REQUEST, "중복된 닉네임입니다.");
+	NICKNAME_DUPLICATED(HttpStatus.BAD_REQUEST, "중복된 닉네임입니다."),
 
 	//heart error
 
-	//movie error
+    //movie error
+    MOVIE_NOT_FOUND(HttpStatus.NOT_FOUND, "영화를 찾을 수 없습니다.");
 
 	//review error
 
@@ -36,6 +37,6 @@ public enum ErrorCode {
 	private final String message;
 
 	public String getMessage(String... args) {
-		return String.format(this.message, (Object[])args);
+		return String.format(this.message, (Object[]) args);
 	}
 }
