@@ -44,7 +44,6 @@ public class ReviewService implements ReviewServiceApi {
         return ReviewResponse.from(savedReview);
     }
 
-    @Override
     @Transactional(readOnly = true)
     public ReviewPageResponse getComments(Long movieId, Pageable pageable) {
         // 영화 존재 여부 확인 (없으면 예외 발생)
