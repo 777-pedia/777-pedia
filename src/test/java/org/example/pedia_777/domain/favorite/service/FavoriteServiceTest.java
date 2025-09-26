@@ -10,8 +10,8 @@ import static org.mockito.Mockito.verify;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import org.example.pedia_777.common.code.ErrorCode;
 import org.example.pedia_777.common.exception.BusinessException;
+import org.example.pedia_777.domain.favorite.code.FavoriteErrorCode;
 import org.example.pedia_777.domain.favorite.dto.response.FavoriteAddResponse;
 import org.example.pedia_777.domain.favorite.entity.Favorite;
 import org.example.pedia_777.domain.favorite.repository.FavoriteRepository;
@@ -30,23 +30,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class FavoriteServiceTest {
 
+    private final Long memberId = 1L;
+    private final Long movieId = 1L;
     @InjectMocks
     private FavoriteService favoriteService;
-
     @Mock
     private FavoriteRepository favoriteRepository;
-
     @Mock
     private MemberServiceApi memberServiceApi;
-
     @Mock
     private MovieServiceApi movieServiceApi;
-
     // 테스트 데이터
     private Member testMember;
     private Movie testMovie;
-    private Long memberId = 1L;
-    private Long movieId = 1L;
 
     @BeforeEach
     void setUp() {
@@ -105,7 +101,7 @@ class FavoriteServiceTest {
             favoriteService.addHeart(memberId, movieId);
         });
 
-        assertEquals(ErrorCode.FAVORITE_ALREADY_EXISTS, exception.getErrorCode());
+        assertEquals(FavoriteErrorCode.FAVORITE_ALREADY_EXISTS, exception.getErrorCode());
         verify(favoriteRepository, never()).save(any(Favorite.class));
     }
 

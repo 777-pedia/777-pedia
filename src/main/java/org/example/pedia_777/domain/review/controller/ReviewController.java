@@ -2,11 +2,12 @@ package org.example.pedia_777.domain.review.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.pedia_777.common.code.SuccessCode;
+import org.example.pedia_777.common.code.CommonSuccessCode;
 import org.example.pedia_777.common.dto.AuthMember;
 import org.example.pedia_777.common.dto.GlobalApiResponse;
 import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.util.ResponseHelper;
+import org.example.pedia_777.domain.review.code.ReviewSuccessCode;
 import org.example.pedia_777.domain.review.dto.request.ReviewCreateRequest;
 import org.example.pedia_777.domain.review.dto.response.ReviewResponse;
 import org.example.pedia_777.domain.review.service.ReviewService;
@@ -35,7 +36,7 @@ public class ReviewController {
             @Valid @RequestBody ReviewCreateRequest request) {
 
         ReviewResponse response = reviewService.createReview(authMember, request);
-        return ResponseHelper.success(SuccessCode.REVIEW_SUCCESS, response);
+        return ResponseHelper.success(CommonSuccessCode.CREATED_SUCCESS, response);
     }
 
     @GetMapping("/reviews")
@@ -53,6 +54,6 @@ public class ReviewController {
         // 페이지와 정렬 조건을 포함한 pageable 생성 (페이지 시작값을 1로 설정)
         Pageable pageable = PageRequest.of(Math.max(0, page - 1), size, sortOrder);
         PageResponse<ReviewResponse> response = reviewService.getReviews(movieId, pageable);
-        return ResponseHelper.success(SuccessCode.REVIEW_LIST_VIEWED, response);
+        return ResponseHelper.success(ReviewSuccessCode.REVIEW_LIST_VIEWED, response);
     }
 }
