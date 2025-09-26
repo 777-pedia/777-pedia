@@ -9,10 +9,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.exception.BusinessException;
 import org.example.pedia_777.domain.favorite.code.FavoriteErrorCode;
 import org.example.pedia_777.domain.favorite.dto.response.FavoriteAddResponse;
+import org.example.pedia_777.domain.favorite.dto.response.FavoriteItemResponse;
 import org.example.pedia_777.domain.favorite.entity.Favorite;
 import org.example.pedia_777.domain.favorite.repository.FavoriteRepository;
 import org.example.pedia_777.domain.member.entity.Member;
@@ -26,6 +29,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class FavoriteServiceTest {
@@ -146,5 +152,29 @@ class FavoriteServiceTest {
         });
 
         assertEquals(FavoriteErrorCode.FAVORITE_NOT_FOUND, exception.getErrorCode());
+    }
+
+
+    @Test
+    @DisplayName("찜한 영화 목록 조회가 성공적으로 수행된다.")
+    void getMyFavoritesSuccess() {
+
+        // given
+        Favorite favorite1 = Favorite.create(testMember, testMovie);
+        Favorite favorite2 = Favorite.create(testMember, testMovie2);
+        Pageable pageable = PageRequest.of(0, 10);
+
+        given(favoriteRepository.findByMemberId(memberId, pageable))
+                .willReturn(new PageImpl<>(List.of(favorite1, favorite2), pageable, 2));
+
+        // when
+        PageResponse<FavoriteItemResponse> myFavorites = favoriteService.getMyFavorites(memberId, pageable);
+
+        // then
+        assertThat(myFavorites.content()).hasSize(2);
+        assertThat(myFavorites.content()).extracting(FavoriteItemResponse::title)
+                .containsExactly("테스트 영화", "테스트 영화2");
+        verify(favoriteRepository).findByMemberId(memberId, pageable);
+
     }
 }
