@@ -36,4 +36,12 @@ public class FavoriteService {
 
         return FavoriteAddResponse.of(movieId, movie.getTitle(), true);
     }
+
+    public void removeFavorite(Long memberId, Long movieId) {
+
+        Favorite favorite = favoriteRepository.findByMemberIdAndMovieId(memberId, movieId)
+                .orElseThrow(() -> new BusinessException(FavoriteErrorCode.FAVORITE_NOT_FOUND));
+
+        favoriteRepository.delete(favorite);
+    }
 }

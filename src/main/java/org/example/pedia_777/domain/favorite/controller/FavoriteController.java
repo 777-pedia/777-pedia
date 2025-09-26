@@ -9,6 +9,7 @@ import org.example.pedia_777.domain.favorite.dto.response.FavoriteAddResponse;
 import org.example.pedia_777.domain.favorite.service.FavoriteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,5 +30,15 @@ public class FavoriteController {
         FavoriteAddResponse response = favoriteService.addFavorite(authMember.id(), movieId);
 
         return ResponseHelper.success(CommonSuccessCode.CREATED_SUCCESS, response);
+    }
+
+    @DeleteMapping("/{movieId}/favorites")
+    public ResponseEntity<GlobalApiResponse<Void>> removeFavorite(
+            @AuthenticationPrincipal AuthMember authMember,
+            @PathVariable Long movieId) {
+
+        favoriteService.removeFavorite(authMember.id(), movieId);
+
+        return ResponseHelper.success(CommonSuccessCode.DELETED_SUCCESS);
     }
 }

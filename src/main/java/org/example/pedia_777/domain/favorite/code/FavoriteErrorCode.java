@@ -9,7 +9,8 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum FavoriteErrorCode implements Code {
 
-    FAVORITE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 찜을 추가한 영화입니다.");
+    FAVORITE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 찜을 추가한 영화입니다."),
+    FAVORITE_NOT_FOUND(HttpStatus.NOT_FOUND, "찜을 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String messageTemplate;
