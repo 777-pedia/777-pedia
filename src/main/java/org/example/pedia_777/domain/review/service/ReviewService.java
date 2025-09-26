@@ -2,8 +2,8 @@ package org.example.pedia_777.domain.review.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.pedia_777.common.code.ErrorCode;
-import org.example.pedia_777.common.exception.BusinessException;
 import org.example.pedia_777.common.dto.AuthMember;
+import org.example.pedia_777.common.exception.BusinessException;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.service.MemberService;
 import org.example.pedia_777.domain.movie.entity.Movie;
@@ -14,6 +14,7 @@ import org.example.pedia_777.domain.review.entity.Review;
 import org.example.pedia_777.domain.review.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 @Service
 @RequiredArgsConstructor
 public class ReviewService implements ReviewServiceApi {
@@ -36,7 +37,6 @@ public class ReviewService implements ReviewServiceApi {
         );
 
         Review savedReview = reviewRepository.save(review);
-
         return ReviewResponse.from(savedReview);
     }
 
