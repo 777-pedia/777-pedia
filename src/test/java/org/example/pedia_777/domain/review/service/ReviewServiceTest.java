@@ -64,14 +64,14 @@ class ReviewServiceTest {
     void createReview_success() {
         // given
         AuthMember authMember = new AuthMember(1L, member.getEmail(), member.getNickname());
-        ReviewCreateRequest request = new ReviewCreateRequest("재밌는 영화", 4.5);
+        ReviewCreateRequest request = new ReviewCreateRequest("재밌는 영화", 4.5, 1L);
 
         given(memberService.findMemberById(authMember.id())).willReturn(member);
-        given(movieService.findMovieById(1L)).willReturn(movie);
+        given(movieService.findMovieById(request.movieId())).willReturn(movie);
         given(reviewRepository.save(any(Review.class))).willReturn(review);
 
         // when
-        ReviewResponse response = reviewService.createReview(1L, authMember, request);
+        ReviewResponse response = reviewService.createReview(authMember, request);
 
         // then
         assertThat(response.comment()).isEqualTo("재밌는 영화");
@@ -80,7 +80,7 @@ class ReviewServiceTest {
         assertThat(response.nickname()).isEqualTo("tester");
 
         then(memberService).should().findMemberById(authMember.id());
-        then(movieService).should().findMovieById(1L);
+        then(movieService).should().findMovieById(request.movieId());
         then(reviewRepository).should().save(any(Review.class));
     }
 

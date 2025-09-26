@@ -24,9 +24,9 @@ public class ReviewService implements ReviewServiceApi {
     private final MovieService movieService;
 
     @Transactional
-    public ReviewResponse createReview(Long movieId, AuthMember authMember, ReviewCreateRequest request) {
+    public ReviewResponse createReview(AuthMember authMember, ReviewCreateRequest request) {
         Member member = memberService.findMemberById(authMember.id());
-        Movie movie = movieService.findMovieById(movieId);
+        Movie movie = movieService.findMovieById(request.movieId());
 
         Review review = Review.create(
                 request.comment(),

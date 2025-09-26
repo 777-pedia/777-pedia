@@ -11,7 +11,6 @@ import org.example.pedia_777.domain.review.dto.response.ReviewResponse;
 import org.example.pedia_777.domain.review.service.ReviewService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,11 +25,10 @@ public class ReviewController {
 
     @PostMapping("/reviews")
     public ResponseEntity<GlobalApiResponse<ReviewResponse>> createReview(
-            @PathVariable Long movieId,
             @AuthenticationPrincipal AuthMember authMember,
             @Valid @RequestBody ReviewCreateRequest request) {
-        ReviewResponse response = reviewService.createReview(movieId, authMember, request);
 
+        ReviewResponse response = reviewService.createReview(authMember, request);
         return ResponseHelper.success(SuccessCode.REVIEW_SUCCESS, response);
     }
 }
