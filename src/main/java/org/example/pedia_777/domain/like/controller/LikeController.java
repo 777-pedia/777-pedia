@@ -23,7 +23,7 @@ public class LikeController {
 
         LikeResponse response = likeService.addLike(authMember.id(), reviewId);
 
-        return GlobalApiResponse.success(SuccessCode.REQUEST_SUCCESS, response);
+        return GlobalApiResponse.success(SuccessCode.LIKE_SUCCESS, response);
     }
 
 }
