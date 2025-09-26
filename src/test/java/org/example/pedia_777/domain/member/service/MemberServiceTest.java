@@ -1,14 +1,19 @@
 package org.example.pedia_777.domain.member.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+import org.example.pedia_777.common.config.JwtUtil;
 import org.example.pedia_777.common.exception.BusinessException;
+import org.example.pedia_777.domain.member.dto.request.MemberLoginRequest;
 import org.example.pedia_777.domain.member.dto.request.MemberRequest;
+import org.example.pedia_777.domain.member.dto.response.MemberLoginResponse;
 import org.example.pedia_777.domain.member.dto.response.MemberResponse;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.repository.MemberRepository;
@@ -28,6 +33,9 @@ class MemberServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private JwtUtil jwtUtil;
 
     @InjectMocks
     private MemberService memberService;
@@ -88,5 +96,41 @@ class MemberServiceTest {
         //when && then
         assertThrows(BusinessException.class,
                 () -> memberService.signup(memberRequest));
+    }
+
+    @Test
+    @DisplayName("로그인 시 이메일과 비밀번호가 올바르지 않을 경우 예외가 발생한다.")
+    public void notMatchEmailPasswordException() {
+        String password = "test";
+        String encodedPassword = "encodedPassword";
+
+        //given
+        Member member = Member.signUp("test@test.com", password, "tester");
+        when(memberRepository.findByEmail(member.getEmail())).thenReturn(Optional.of(member));
+        when(passwordEncoder.matches(eq(encodedPassword), eq(member.getPassword()))).thenReturn(false);
+
+        MemberLoginRequest memberLoginRequest = new MemberLoginRequest(member.getEmail(), encodedPassword);
+
+        //when && then
+        assertThrows(BusinessException.class, () ->
+                memberService.login(memberLoginRequest));
+    }
+
+    @Test
+    @DisplayName("존재하는 회원이 로그인 시 정상적으로 토큰이 반환된다.")
+    public void successLoginGetToken() {
+        //given
+        Member member = Member.signUp("test@test.com", "test", "tester");
+        when(memberRepository.findByEmail(member.getEmail())).thenReturn(Optional.of(member));
+        when(passwordEncoder.matches(member.getPassword(), "test")).thenReturn(true);
+        when(jwtUtil.createToken(any(), eq(member.getEmail()), eq(member.getNickname()))).thenReturn("fakeToken");
+
+        MemberLoginRequest memberLoginRequest = new MemberLoginRequest(member.getEmail(), member.getPassword());
+
+        //when
+        MemberLoginResponse login = memberService.login(memberLoginRequest);
+
+        //then
+        assertEquals(login.token(), "fakeToken");
     }
 }
