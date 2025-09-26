@@ -4,15 +4,22 @@ import lombok.RequiredArgsConstructor;
 import org.example.pedia_777.common.code.CommonSuccessCode;
 import org.example.pedia_777.common.dto.AuthMember;
 import org.example.pedia_777.common.dto.GlobalApiResponse;
+import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.util.ResponseHelper;
 import org.example.pedia_777.domain.like.dto.response.LikeResponse;
+import org.example.pedia_777.domain.like.dto.response.LikedReviewResponse;
 import org.example.pedia_777.domain.like.service.LikeService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -36,6 +43,20 @@ public class LikeController {
             @AuthenticationPrincipal AuthMember authMember, @PathVariable Long reviewId) {
 
         LikeResponse response = likeService.cancelLike(authMember.id(), reviewId);
+
+        return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS, response);
+    }
+
+    @GetMapping("/likes")
+    public ResponseEntity<GlobalApiResponse<PageResponse<LikedReviewResponse>>> getLikedReviews(
+            @AuthenticationPrincipal AuthMember authMember,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(Math.max(0, page - 1), size, sort);
+
+        PageResponse<LikedReviewResponse> response = likeService.getLikedReviews(authMember.id(), pageable);
 
         return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS, response);
     }

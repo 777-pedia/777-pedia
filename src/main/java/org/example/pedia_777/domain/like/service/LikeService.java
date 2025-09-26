@@ -1,20 +1,25 @@
 package org.example.pedia_777.domain.like.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.exception.BusinessException;
 import org.example.pedia_777.domain.like.code.LikeErrorCode;
 import org.example.pedia_777.domain.like.dto.response.LikeResponse;
+import org.example.pedia_777.domain.like.dto.response.LikedReviewResponse;
 import org.example.pedia_777.domain.like.entity.Like;
 import org.example.pedia_777.domain.like.repository.LikeRepository;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.service.MemberServiceApi;
 import org.example.pedia_777.domain.review.entity.Review;
 import org.example.pedia_777.domain.review.service.ReviewServiceApi;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class LikeService implements LikeServiceApi {
 
     private final LikeRepository likeRepository;
@@ -55,4 +60,12 @@ public class LikeService implements LikeServiceApi {
         return LikeResponse.of(reviewId, currentReview.getLikeCount(), false);
     }
 
+    public PageResponse<LikedReviewResponse> getLikedReviews(Long memberId, Pageable pageable) {
+
+        Page<Like> likedReviewPage = likeRepository.findByMemberId(memberId, pageable);
+
+        Page<LikedReviewResponse> response = likedReviewPage.map(LikedReviewResponse::from);
+
+        return PageResponse.from(response);
+    }
 }
