@@ -19,8 +19,8 @@ public record ReviewResponse(
                 review.getComment(),
                 review.getStar(),
                 review.getLikeCount(),
-                review.getMovies().getId(),
-                review.getMembers().getId(),
+                review.getMovie().getId(),
+                review.getMember().getId(),
                 review.getUpdatedAt(),
                 review.getDeletedAt()
         );
