@@ -17,7 +17,7 @@ public record ReviewResponse(
                 review.getComment(),
                 review.getStar(),
                 review.getLikeCount(),
-                review.getMembers().getNickname(),
+                review.getMember().getNickname(),
                 review.getCreatedAt()
         );
     }
