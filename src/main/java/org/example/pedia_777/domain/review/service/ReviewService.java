@@ -17,6 +17,7 @@ import org.example.pedia_777.domain.review.repository.ReviewRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,8 +50,17 @@ public class ReviewService implements ReviewServiceApi {
     public PageResponse<ReviewResponse> getReviews(Long movieId, int page, int size, ReviewSort sort) {
         movieServiceApi.findMovieById(movieId);
 
+        Sort sortOrder;
+        if (sort == ReviewSort.NEWEST) {
+            sortOrder = Sort.by("createdAt").descending();
+        } else if (sort == ReviewSort.OLDEST) {
+            sortOrder = Sort.by("createdAt").ascending();
+        } else {
+            sortOrder = Sort.by(Sort.Order.desc("likeCount"), Sort.Order.desc("createdAt"));
+        }
+        
         // 영화 ID로 리뷰 조회 (페이징 적용)
-        Pageable pageable = PageRequest.of(Math.max(0, page - 1), size, sort.getSort());
+        Pageable pageable = PageRequest.of(Math.max(0, page - 1), size, sortOrder);
         Page<Review> reviewPage = reviewRepository.findByMovieId(movieId, pageable);
 
         // 엔티티 -> DTO 매핑
