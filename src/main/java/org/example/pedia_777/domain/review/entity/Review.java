@@ -23,13 +23,16 @@ import org.example.pedia_777.domain.like.entity.Like;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.movie.entity.Movie;
 import org.example.pedia_777.domain.review.dto.request.ReviewUpdateRequest;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.LastModifiedDate;
 
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-
+@SQLDelete(sql = "UPDATE review SET deleted_at = current_timestamp WHERE id = ?")
+@SQLRestriction("deleted_at IS NULL")
 public class Review extends BaseTimeEntity {
 
     @Id
