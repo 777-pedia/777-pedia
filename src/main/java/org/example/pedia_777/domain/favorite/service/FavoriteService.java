@@ -5,7 +5,7 @@ import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.exception.BusinessException;
 import org.example.pedia_777.domain.favorite.code.FavoriteErrorCode;
 import org.example.pedia_777.domain.favorite.dto.response.FavoriteAddResponse;
-import org.example.pedia_777.domain.favorite.dto.response.FavoriteItemResponse;
+import org.example.pedia_777.domain.favorite.dto.response.FavoriteMovieResponse;
 import org.example.pedia_777.domain.favorite.entity.Favorite;
 import org.example.pedia_777.domain.favorite.repository.FavoriteRepository;
 import org.example.pedia_777.domain.member.entity.Member;
@@ -51,11 +51,11 @@ public class FavoriteService {
         favoriteRepository.delete(favorite);
     }
 
-    public PageResponse<FavoriteItemResponse> getMyFavorites(Long memberId, Pageable pageable) {
+    public PageResponse<FavoriteMovieResponse> getMyFavorites(Long memberId, Pageable pageable) {
 
         Page<Favorite> favoritePage = favoriteRepository.findByMemberId(memberId, pageable);
 
-        Page<FavoriteItemResponse> response = favoritePage.map(FavoriteItemResponse::from);
+        Page<FavoriteMovieResponse> response = favoritePage.map(FavoriteMovieResponse::from);
 
         return PageResponse.from(response);
     }

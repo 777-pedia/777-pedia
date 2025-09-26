@@ -7,7 +7,7 @@ import org.example.pedia_777.common.dto.GlobalApiResponse;
 import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.util.ResponseHelper;
 import org.example.pedia_777.domain.favorite.dto.response.FavoriteAddResponse;
-import org.example.pedia_777.domain.favorite.dto.response.FavoriteItemResponse;
+import org.example.pedia_777.domain.favorite.dto.response.FavoriteMovieResponse;
 import org.example.pedia_777.domain.favorite.service.FavoriteService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -50,7 +50,7 @@ public class FavoriteController {
     }
 
     @GetMapping("/favorites")
-    public ResponseEntity<GlobalApiResponse<PageResponse<FavoriteItemResponse>>> getMyFavorites(
+    public ResponseEntity<GlobalApiResponse<PageResponse<FavoriteMovieResponse>>> getMyFavorites(
             @AuthenticationPrincipal AuthMember authMember,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -58,7 +58,7 @@ public class FavoriteController {
         Sort sort = Sort.by("createdAt").descending();
         Pageable pageable = PageRequest.of(Math.max(0, page - 1), size, sort);
 
-        PageResponse<FavoriteItemResponse> response = favoriteService.getMyFavorites(authMember.id(), pageable);
+        PageResponse<FavoriteMovieResponse> response = favoriteService.getMyFavorites(authMember.id(), pageable);
 
         return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS, response);
     }
