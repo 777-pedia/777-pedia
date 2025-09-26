@@ -22,7 +22,7 @@ public class FavoriteService {
     private final MovieServiceApi movieServiceApi;
     private final MemberServiceApi memberServiceApi;
 
-    public FavoriteAddResponse addHeart(Long memberId, Long movieId) {
+    public FavoriteAddResponse addFavorite(Long memberId, Long movieId) {
 
         Member member = memberServiceApi.findMemberById(memberId);
         Movie movie = movieServiceApi.findMovieById((movieId));
@@ -31,9 +31,17 @@ public class FavoriteService {
             throw new BusinessException(FavoriteErrorCode.FAVORITE_ALREADY_EXISTS);
         }
 
-        Favorite heart = Favorite.create(member, movie);
-        favoriteRepository.save(heart);
+        Favorite favorite = Favorite.create(member, movie);
+        favoriteRepository.save(favorite);
 
         return FavoriteAddResponse.of(movieId, movie.getTitle(), true);
+    }
+
+    public void removeFavorite(Long memberId, Long movieId) {
+
+        Favorite favorite = favoriteRepository.findByMemberIdAndMovieId(memberId, movieId)
+                .orElseThrow(() -> new BusinessException(FavoriteErrorCode.FAVORITE_NOT_FOUND));
+
+        favoriteRepository.delete(favorite);
     }
 }

@@ -76,12 +76,12 @@ class FavoriteServiceTest {
         given(favoriteRepository.findByMemberIdAndMovieId(memberId, movieId)).willReturn(Optional.empty());
 
         // when
-        FavoriteAddResponse response = favoriteService.addHeart(memberId, movieId);
+        FavoriteAddResponse response = favoriteService.addFavorite(memberId, movieId);
 
         // then
         assertThat(response.movieId()).isEqualTo(movieId);
         assertThat(response.title()).isEqualTo(testMovie.getTitle());
-        assertThat(response.isHeart()).isTrue();
+        assertThat(response.isFavorite()).isTrue();
 
         verify(favoriteRepository).save(any(Favorite.class));
     }
@@ -98,11 +98,40 @@ class FavoriteServiceTest {
 
         // when & then
         BusinessException exception = assertThrows(BusinessException.class, () -> {
-            favoriteService.addHeart(memberId, movieId);
+            favoriteService.addFavorite(memberId, movieId);
         });
 
         assertEquals(FavoriteErrorCode.FAVORITE_ALREADY_EXISTS, exception.getErrorCode());
         verify(favoriteRepository, never()).save(any(Favorite.class));
     }
 
+    @Test
+    @DisplayName("영화 찜 해제 시 성공적으로 삭제된다.")
+    void removeFavoriteSuccess() {
+
+        // given
+        Favorite favorite = Favorite.create(testMember, testMovie);
+        given(favoriteRepository.findByMemberIdAndMovieId(memberId, movieId)).willReturn(Optional.of(favorite));
+
+        // when
+        favoriteService.removeFavorite(memberId, movieId);
+
+        // then
+        verify(favoriteRepository).delete(favorite);
+    }
+
+    @Test
+    @DisplayName("영화 찜 해제 시 찜하지 않은 영화인 경우 예외 발생한다.")
+    void removeFavoriteFail_NotFound() {
+
+        // given
+        given(favoriteRepository.findByMemberIdAndMovieId(memberId, movieId)).willReturn(Optional.empty());
+
+        // when & then
+        BusinessException exception = assertThrows(BusinessException.class, () -> {
+            favoriteService.removeFavorite(memberId, movieId);
+        });
+
+        assertEquals(FavoriteErrorCode.FAVORITE_NOT_FOUND, exception.getErrorCode());
+    }
 }
