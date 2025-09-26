@@ -1,8 +1,8 @@
 package org.example.pedia_777.domain.like.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.pedia_777.common.code.ErrorCode;
 import org.example.pedia_777.common.exception.BusinessException;
+import org.example.pedia_777.domain.like.code.LikeErrorCode;
 import org.example.pedia_777.domain.like.dto.response.LikeResponse;
 import org.example.pedia_777.domain.like.entity.Like;
 import org.example.pedia_777.domain.like.repository.LikeRepository;
@@ -26,7 +26,7 @@ public class LikeService implements LikeServiceApi {
 
         //동시성 이슈 발생 가능1
         if (likeRepository.existsByMemberIdAndReviewId(memberId, reviewId)) {
-            throw new BusinessException(ErrorCode.LIKE_ALREADY_EXISTS);
+            throw new BusinessException(LikeErrorCode.LIKE_ALREADY_EXISTS);
         }
 
         Member currentMember = memberServiceApi.findMemberById(memberId);

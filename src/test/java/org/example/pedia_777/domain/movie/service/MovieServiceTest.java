@@ -6,8 +6,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 import java.util.Optional;
-import org.example.pedia_777.common.code.ErrorCode;
 import org.example.pedia_777.common.exception.BusinessException;
+import org.example.pedia_777.domain.movie.code.MovieErrorCode;
 import org.example.pedia_777.domain.movie.repository.MovieRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +37,7 @@ class MovieServiceTest {
         });
 
         // then
-        assertEquals(ErrorCode.MOVIE_NOT_FOUND, exception.getErrorCode());
+        assertEquals(MovieErrorCode.MOVIE_NOT_FOUND, exception.getErrorCode());
         verify(movieRepository).findById(nonExistentMovieId);
     }
 }

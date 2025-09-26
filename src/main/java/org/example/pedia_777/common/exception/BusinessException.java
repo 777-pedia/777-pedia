@@ -1,16 +1,15 @@
 package org.example.pedia_777.common.exception;
 
-import org.example.pedia_777.common.code.ErrorCode;
-
 import lombok.Getter;
+import org.example.pedia_777.common.code.Code;
 
 @Getter
 public class BusinessException extends RuntimeException {
 
-	private final ErrorCode errorCode;
+    private final Code errorCode;
 
-	public BusinessException(ErrorCode errorCode) {
-		super(errorCode.getMessage());
-		this.errorCode = errorCode;
-	}
+    public BusinessException(Code errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
+    }
 }

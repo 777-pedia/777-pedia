@@ -2,7 +2,7 @@ package org.example.pedia_777.domain.review.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.pedia_777.common.code.SuccessCode;
+import org.example.pedia_777.common.code.CommonSuccessCode;
 import org.example.pedia_777.common.dto.AuthMember;
 import org.example.pedia_777.common.dto.GlobalApiResponse;
 import org.example.pedia_777.common.util.ResponseHelper;
@@ -29,6 +29,6 @@ public class ReviewController {
             @Valid @RequestBody ReviewCreateRequest request) {
 
         ReviewResponse response = reviewService.createReview(authMember, request);
-        return ResponseHelper.success(SuccessCode.REVIEW_SUCCESS, response);
+        return ResponseHelper.success(CommonSuccessCode.CREATED_SUCCESS, response);
     }
 }

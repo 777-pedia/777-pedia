@@ -8,13 +8,13 @@ import static org.mockito.BDDMockito.then;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import org.example.pedia_777.common.code.ErrorCode;
 import org.example.pedia_777.common.dto.AuthMember;
 import org.example.pedia_777.common.exception.BusinessException;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.service.MemberService;
 import org.example.pedia_777.domain.movie.entity.Movie;
 import org.example.pedia_777.domain.movie.service.MovieService;
+import org.example.pedia_777.domain.review.code.ReviewErrorCode;
 import org.example.pedia_777.domain.review.dto.request.ReviewCreateRequest;
 import org.example.pedia_777.domain.review.dto.response.ReviewResponse;
 import org.example.pedia_777.domain.review.entity.Review;
@@ -108,6 +108,6 @@ class ReviewServiceTest {
         // when & then
         assertThatThrownBy(() -> reviewService.findReviewById(99L))
                 .isInstanceOf(BusinessException.class)
-                .hasMessage(ErrorCode.REVIEW_NOT_FOUND.getMessage());
+                .hasMessage(ReviewErrorCode.REVIEW_NOT_FOUND.getMessage());
     }
 }

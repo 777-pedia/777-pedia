@@ -1,7 +1,7 @@
 package org.example.pedia_777.domain.favorite.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.pedia_777.common.code.SuccessCode;
+import org.example.pedia_777.common.code.CommonSuccessCode;
 import org.example.pedia_777.common.dto.AuthMember;
 import org.example.pedia_777.common.dto.GlobalApiResponse;
 import org.example.pedia_777.common.util.ResponseHelper;
@@ -28,6 +28,6 @@ public class FavoriteController {
 
         FavoriteAddResponse response = favoriteService.addHeart(authMember.id(), movieId);
 
-        return ResponseHelper.success(SuccessCode.FAVORITE_ADD_SUCCESS, response);
+        return ResponseHelper.success(CommonSuccessCode.CREATED_SUCCESS, response);
     }
 }
