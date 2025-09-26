@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.pedia_777.common.code.SuccessCode;
 import org.example.pedia_777.common.dto.AuthMember;
 import org.example.pedia_777.common.dto.GlobalApiResponse;
+import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.util.ResponseHelper;
 import org.example.pedia_777.domain.review.dto.request.ReviewCreateRequest;
-import org.example.pedia_777.domain.review.dto.response.ReviewPageResponse;
 import org.example.pedia_777.domain.review.dto.response.ReviewResponse;
 import org.example.pedia_777.domain.review.service.ReviewService;
 import org.springframework.data.domain.PageRequest;
@@ -39,7 +39,7 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews")
-    public ResponseEntity<GlobalApiResponse<ReviewPageResponse>> getReviewList(
+    public ResponseEntity<GlobalApiResponse<PageResponse<ReviewResponse>>> getReviewList(
             @RequestParam Long movieId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -52,7 +52,7 @@ public class ReviewController {
 
         // 페이지와 정렬 조건을 포함한 pageable 생성 (페이지 시작값을 1로 설정)
         Pageable pageable = PageRequest.of(Math.max(0, page - 1), size, sortOrder);
-        ReviewPageResponse response = reviewService.getReviews(movieId, pageable);
+        PageResponse<ReviewResponse> response = reviewService.getReviews(movieId, pageable);
         return ResponseHelper.success(SuccessCode.REVIEW_LIST_VIEWED, response);
     }
 }
