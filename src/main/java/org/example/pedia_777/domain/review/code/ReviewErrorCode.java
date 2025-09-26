@@ -9,9 +9,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum ReviewErrorCode implements Code {
 
-    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),
-    CLIENT_UPDATE_ERROR(HttpStatus.UNAUTHORIZED, "본인의 리뷰만 수정할 수 있습니다."),
-    CLIENT_DELETE_ERROR(HttpStatus.UNAUTHORIZED, "본인의 리뷰만 삭제할 수 있습니다.");
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String messageTemplate;

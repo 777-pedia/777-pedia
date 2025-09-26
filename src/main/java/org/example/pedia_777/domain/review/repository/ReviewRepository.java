@@ -14,6 +14,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @EntityGraph(attributePaths = {"member"})
     Page<Review> findByMovieId(Long movieId, Pageable pageable);
 
-    @Query("SELECT r FROM Review r JOIN FETCH r.member WHERE r.id = :reviewId")
-    Optional<Review> findByWithMember(@Param("reviewId") Long reviewId);
+    @Query("SELECT r FROM Review r WHERE r.id = :reviewId AND r.member.id = :memberId")
+    Optional<Review> findByIdAndMemberId(@Param("reviewId") Long reviewId,
+                                         @Param("memberId") Long memberId);
 }
