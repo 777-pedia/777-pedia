@@ -59,10 +59,10 @@ public class ReviewService implements ReviewServiceApi {
 
     @Transactional
     public ReviewResponse updateReview(Long reviewId, AuthMember authMember, ReviewUpdateRequest request) {
-        Review review = findReviewById(reviewId);
+        Review review = reviewRepository.findByWithMember(reviewId).orElseThrow(
+                () -> new BusinessException(ReviewErrorCode.REVIEW_NOT_FOUND));
 
-        Member member = memberServiceApi.findMemberById(authMember.id());
-        if (!review.getMember().getId().equals(member.getId())) {
+        if (!review.getMember().getId().equals(authMember.id())) {
             throw new BusinessException(ReviewErrorCode.CLIENT_UPDATE_ERROR);
         }
 
@@ -71,10 +71,10 @@ public class ReviewService implements ReviewServiceApi {
     }
 
     public void deleteReview(Long reviewId, AuthMember authMember) {
-        Review review = findReviewById(reviewId);
-
-        Member member = memberServiceApi.findMemberById(authMember.id());
-        if (!review.getMember().getId().equals(member.getId())) {
+        Review review = reviewRepository.findByWithMember(reviewId).orElseThrow(
+                () -> new BusinessException(ReviewErrorCode.REVIEW_NOT_FOUND));
+        
+        if (!review.getMember().getId().equals(authMember.id())) {
             throw new BusinessException(ReviewErrorCode.CLIENT_DELETE_ERROR);
         }
 
