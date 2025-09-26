@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.pedia_777.common.entity.BaseTimeEntity;
@@ -29,4 +30,14 @@ public class Like extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Review review;
+
+    @Builder(access = AccessLevel.PRIVATE)
+    public Like(Member member, Review review) {
+        this.member = member;
+        this.review = review;
+    }
+
+    public static Like of(Member member, Review review) {
+        return Like.builder().member(member).review(review).build();
+    }
 }
