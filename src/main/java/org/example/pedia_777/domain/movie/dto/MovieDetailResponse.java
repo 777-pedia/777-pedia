@@ -1,6 +1,7 @@
 package org.example.pedia_777.domain.movie.dto;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import org.example.pedia_777.domain.movie.entity.Movie;
 
 public record MovieDetailResponse(
@@ -20,8 +21,8 @@ public record MovieDetailResponse(
                 movie.getId(),
                 movie.getTitle(),
                 movie.getDirector(),
-                movie.getActors().split(","),
-                movie.getGenres().split(","),
+                splitSafely(movie.getActors()),
+                splitSafely(movie.getGenres()),
                 movie.getReleaseDate(),
                 movie.getRuntime(),
                 movie.getCountry(),
@@ -30,4 +31,14 @@ public record MovieDetailResponse(
         );
     }
 
+    private static String[] splitSafely(String source) {
+
+        if (source == null || source.isBlank()) {
+            return new String[0];
+        }
+
+        return Arrays.stream(source.split(","))
+                .map(String::trim)
+                .toArray(String[]::new);
+    }
 }
