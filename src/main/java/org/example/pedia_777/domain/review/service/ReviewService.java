@@ -2,6 +2,7 @@ package org.example.pedia_777.domain.review.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.pedia_777.common.code.ErrorCode;
+import org.example.pedia_777.common.dto.AuthMember;
 import org.example.pedia_777.common.exception.BusinessException;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.service.MemberService;
@@ -23,8 +24,8 @@ public class ReviewService implements ReviewServiceApi {
     private final MovieService movieService;
 
     @Transactional
-    public ReviewResponse createReview(ReviewCreateRequest request) {
-        Member member = memberService.findMemberById(request.memberId());
+    public ReviewResponse createReview(AuthMember authMember, ReviewCreateRequest request) {
+        Member member = memberService.findMemberById(authMember.id());
         Movie movie = movieService.findMovieById(request.movieId());
 
         Review review = Review.create(
@@ -36,7 +37,6 @@ public class ReviewService implements ReviewServiceApi {
         );
 
         Review savedReview = reviewRepository.save(review);
-
         return ReviewResponse.from(savedReview);
     }
 
