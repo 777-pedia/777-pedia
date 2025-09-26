@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.pedia_777.common.code.SuccessCode;
 import org.example.pedia_777.common.dto.GlobalApiResponse;
 import org.example.pedia_777.common.util.ResponseHelper;
+import org.example.pedia_777.common.dto.AuthMember;
 import org.example.pedia_777.domain.review.dto.request.ReviewCreateRequest;
 import org.example.pedia_777.domain.review.dto.response.ReviewPageResponse;
 import org.example.pedia_777.domain.review.dto.response.ReviewResponse;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,16 +24,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/reviews")
+@RequestMapping("/api/v1/")
 @RequiredArgsConstructor
 public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @PostMapping
-    public ResponseEntity<ReviewResponse> createReview(@Valid @RequestBody ReviewCreateRequest request) {
-        ReviewResponse response = reviewService.createReview(request);
-        return ResponseEntity.ok(response);
+    @PostMapping("/reviews")
+    public ResponseEntity<GlobalApiResponse<ReviewResponse>> createReview(
+            @AuthenticationPrincipal AuthMember authMember,
+            @Valid @RequestBody ReviewCreateRequest request) {
+
+        ReviewResponse response = reviewService.createReview(authMember, request);
+        return ResponseHelper.success(SuccessCode.REVIEW_SUCCESS, response);
     }
 
     @GetMapping("/reviews")

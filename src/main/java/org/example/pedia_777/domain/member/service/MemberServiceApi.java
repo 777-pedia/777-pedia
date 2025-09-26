@@ -1,12 +1,12 @@
 package org.example.pedia_777.domain.member.service;
 
-import org.example.pedia_777.domain.member.entity.Members;
+import org.example.pedia_777.domain.member.entity.Member;
 
 public interface MemberServiceApi {
 
-	Members findMemberById(Long memberId);
+    Member findMemberById(Long memberId);
 
-	void existsByEmail(String email);
+    void existsByEmail(String email);
 
-	Members findMemberByEmail(String email);
+    Member findMemberByEmail(String email);
 }

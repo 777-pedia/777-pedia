@@ -17,6 +17,7 @@ public enum SuccessCode {
     LOGIN_SUCCESS(HttpStatus.OK, "로그인이 완료되었습니다."),
 
     // favorite
+    FAVORITE_ADD_SUCCESS(HttpStatus.OK, "찜이 성공적으로 추가되었습니다."),
 
     // movie
 

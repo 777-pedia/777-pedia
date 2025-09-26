@@ -16,7 +16,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Entity
-public class Movies extends BaseTimeEntity {
+public class Movie extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,8 +37,8 @@ public class Movies extends BaseTimeEntity {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Movies(String director, String title, String actors, String genres, LocalDateTime releaseDate, Long runtime,
-                  String country, String overview, String posterUrl) {
+    public Movie(String director, String title, String actors, String genres, LocalDateTime releaseDate, Long runtime,
+                 String country, String overview, String posterUrl) {
         this.director = director;
         this.title = title;
         this.actors = actors;
@@ -50,10 +50,10 @@ public class Movies extends BaseTimeEntity {
         this.posterUrl = posterUrl;
     }
 
-    public static Movies of(String director, String title, String actors, String genres, LocalDateTime releaseDate,
-                            Long runtime,
-                            String country, String overview, String posterUrl) {
-        return Movies.builder()
+    public static Movie of(String director, String title, String actors, String genres, LocalDateTime releaseDate,
+                           Long runtime,
+                           String country, String overview, String posterUrl) {
+        return Movie.builder()
                 .director(director)
                 .title(title)
                 .actors(actors)
