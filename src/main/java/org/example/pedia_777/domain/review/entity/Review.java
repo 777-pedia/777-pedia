@@ -10,6 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,10 +19,9 @@ import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.movie.entity.Movie;
 import org.springframework.data.annotation.LastModifiedDate;
 
-
-@Entity
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class Review extends BaseTimeEntity {
 
     @Id

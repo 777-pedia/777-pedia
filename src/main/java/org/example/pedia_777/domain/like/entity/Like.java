@@ -7,10 +7,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.example.pedia_777.common.entity.BaseTimeEntity;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.review.entity.Review;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "likes")
 @Entity
 public class Like extends BaseTimeEntity {

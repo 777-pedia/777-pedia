@@ -1,4 +1,4 @@
-package org.example.pedia_777.domain.heart.entity;
+package org.example.pedia_777.domain.favorite.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
