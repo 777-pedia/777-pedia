@@ -22,7 +22,6 @@ public class MovieController {
     @GetMapping("/{movieId}")
     public ResponseEntity<GlobalApiResponse<MovieDetailResponse>> getMovieDetails(@PathVariable Long movieId) {
 
-        MovieDetailResponse response = movieService.getMovieDetails(movieId);
-        return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS, response);
+        return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS, movieService.getMovieDetails(movieId));
     }
 }

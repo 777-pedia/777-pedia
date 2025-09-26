@@ -18,8 +18,7 @@ public class MovieService implements MovieServiceApi {
 
     public MovieDetailResponse getMovieDetails(Long movieId) {
 
-        Movie movie = findMovieById(movieId);
-        return MovieDetailResponse.from(movie);
+        return MovieDetailResponse.from(findMovieById(movieId));
     }
 
 
