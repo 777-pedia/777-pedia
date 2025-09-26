@@ -8,11 +8,14 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.exception.BusinessException;
 import org.example.pedia_777.domain.favorite.code.FavoriteErrorCode;
 import org.example.pedia_777.domain.favorite.dto.response.FavoriteAddResponse;
+import org.example.pedia_777.domain.favorite.dto.response.FavoriteMovieResponse;
 import org.example.pedia_777.domain.favorite.entity.Favorite;
 import org.example.pedia_777.domain.favorite.repository.FavoriteRepository;
 import org.example.pedia_777.domain.member.entity.Member;
@@ -26,6 +29,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @ExtendWith(MockitoExtension.class)
 class FavoriteServiceTest {
@@ -43,6 +49,7 @@ class FavoriteServiceTest {
     // 테스트 데이터
     private Member testMember;
     private Movie testMovie;
+    private Movie testMovie2;
 
     @BeforeEach
     void setUp() {
@@ -57,11 +64,23 @@ class FavoriteServiceTest {
                 "테스트 영화",
                 "배우1, 배우2",
                 "코미디",
-                LocalDateTime.now(),
-                120L,
+                LocalDate.now(),
+                120,
                 "한국",
                 "영화 줄거리",
                 "http://test.url"
+        );
+
+        testMovie2 = Movie.of(
+                "감독2",
+                "테스트 영화2",
+                "배우3, 배우4",
+                "스릴러",
+                LocalDate.now(),
+                120,
+                "한국",
+                "영화 줄거리2",
+                "http://test.url2"
         );
     }
 
@@ -133,5 +152,29 @@ class FavoriteServiceTest {
         });
 
         assertEquals(FavoriteErrorCode.FAVORITE_NOT_FOUND, exception.getErrorCode());
+    }
+
+
+    @Test
+    @DisplayName("찜한 영화 목록 조회가 성공적으로 수행된다.")
+    void getMyFavoritesSuccess() {
+
+        // given
+        Favorite favorite1 = Favorite.create(testMember, testMovie);
+        Favorite favorite2 = Favorite.create(testMember, testMovie2);
+        Pageable pageable = PageRequest.of(0, 10);
+
+        given(favoriteRepository.findByMemberId(memberId, pageable))
+                .willReturn(new PageImpl<>(List.of(favorite1, favorite2), pageable, 2));
+
+        // when
+        PageResponse<FavoriteMovieResponse> myFavorites = favoriteService.getMyFavorites(memberId, pageable);
+
+        // then
+        assertThat(myFavorites.content()).hasSize(2);
+        assertThat(myFavorites.content()).extracting(FavoriteMovieResponse::title)
+                .containsExactly("테스트 영화", "테스트 영화2");
+        verify(favoriteRepository).findByMemberId(memberId, pageable);
+
     }
 }
