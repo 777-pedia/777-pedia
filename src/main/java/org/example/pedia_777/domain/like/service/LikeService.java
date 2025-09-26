@@ -40,4 +40,19 @@ public class LikeService implements LikeServiceApi {
         return LikeResponse.of(reviewId, currentReview.getLikeCount(), true);
     }
 
+    @Transactional
+    public LikeResponse cancelLike(Long memberId, Long reviewId) {
+
+        Like foundLike = likeRepository.findByMemberIdAndReviewId(memberId, reviewId)
+                .orElseThrow(() -> new BusinessException(LikeErrorCode.LIKE_NOT_FOUND));
+
+        Review currentReview = reviewServiceApi.findReviewById(reviewId);
+        likeRepository.delete(foundLike);
+
+        //동시성 이슈 발생 가능 3
+        currentReview.decrementLikeCount();
+
+        return LikeResponse.of(reviewId, currentReview.getLikeCount(), false);
+    }
+
 }
