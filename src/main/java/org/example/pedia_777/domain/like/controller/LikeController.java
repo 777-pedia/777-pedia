@@ -1,7 +1,7 @@
 package org.example.pedia_777.domain.like.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.pedia_777.common.code.SuccessCode;
+import org.example.pedia_777.common.code.CommonSuccessCode;
 import org.example.pedia_777.common.dto.AuthMember;
 import org.example.pedia_777.common.dto.GlobalApiResponse;
 import org.example.pedia_777.common.util.ResponseHelper;
@@ -25,7 +25,7 @@ public class LikeController {
 
         LikeResponse response = likeService.addLike(authMember.id(), reviewId);
 
-        return ResponseHelper.success(SuccessCode.REQUEST_SUCCESS, response);
+        return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS, response);
     }
 
 }

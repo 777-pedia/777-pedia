@@ -1,8 +1,8 @@
 package org.example.pedia_777.domain.favorite.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.pedia_777.common.code.ErrorCode;
 import org.example.pedia_777.common.exception.BusinessException;
+import org.example.pedia_777.domain.favorite.code.FavoriteErrorCode;
 import org.example.pedia_777.domain.favorite.dto.response.FavoriteAddResponse;
 import org.example.pedia_777.domain.favorite.entity.Favorite;
 import org.example.pedia_777.domain.favorite.repository.FavoriteRepository;
@@ -28,7 +28,7 @@ public class FavoriteService {
         Movie movie = movieServiceApi.findMovieById((movieId));
 
         if (favoriteRepository.findByMemberIdAndMovieId(memberId, movieId).isPresent()) {
-            throw new BusinessException(ErrorCode.FAVORITE_ALREADY_EXISTS);
+            throw new BusinessException(FavoriteErrorCode.FAVORITE_ALREADY_EXISTS);
         }
 
         Favorite heart = Favorite.create(member, movie);
