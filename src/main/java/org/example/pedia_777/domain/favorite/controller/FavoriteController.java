@@ -22,11 +22,11 @@ public class FavoriteController {
     private final FavoriteService favoriteService;
 
     @PostMapping("/{movieId}/favorites")
-    public ResponseEntity<GlobalApiResponse<FavoriteAddResponse>> addHeart(
+    public ResponseEntity<GlobalApiResponse<FavoriteAddResponse>> addFavorite(
             @AuthenticationPrincipal AuthMember authMember,
             @PathVariable Long movieId) {
 
-        FavoriteAddResponse response = favoriteService.addHeart(authMember.id(), movieId);
+        FavoriteAddResponse response = favoriteService.addFavorite(authMember.id(), movieId);
 
         return ResponseHelper.success(CommonSuccessCode.CREATED_SUCCESS, response);
     }

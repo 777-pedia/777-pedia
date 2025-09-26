@@ -3,10 +3,10 @@ package org.example.pedia_777.domain.favorite.dto.response;
 public record FavoriteAddResponse(
         Long movieId,
         String title,
-        boolean isHeart
+        boolean isFavorite
 ) {
 
-    public static FavoriteAddResponse of(Long movieId, String title, boolean isHeart) {
-        return new FavoriteAddResponse(movieId, title, isHeart);
+    public static FavoriteAddResponse of(Long movieId, String title, boolean isFavorite) {
+        return new FavoriteAddResponse(movieId, title, isFavorite);
     }
 }

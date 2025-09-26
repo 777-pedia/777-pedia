@@ -76,12 +76,12 @@ class FavoriteServiceTest {
         given(favoriteRepository.findByMemberIdAndMovieId(memberId, movieId)).willReturn(Optional.empty());
 
         // when
-        FavoriteAddResponse response = favoriteService.addHeart(memberId, movieId);
+        FavoriteAddResponse response = favoriteService.addFavorite(memberId, movieId);
 
         // then
         assertThat(response.movieId()).isEqualTo(movieId);
         assertThat(response.title()).isEqualTo(testMovie.getTitle());
-        assertThat(response.isHeart()).isTrue();
+        assertThat(response.isFavorite()).isTrue();
 
         verify(favoriteRepository).save(any(Favorite.class));
     }
@@ -98,7 +98,7 @@ class FavoriteServiceTest {
 
         // when & then
         BusinessException exception = assertThrows(BusinessException.class, () -> {
-            favoriteService.addHeart(memberId, movieId);
+            favoriteService.addFavorite(memberId, movieId);
         });
 
         assertEquals(FavoriteErrorCode.FAVORITE_ALREADY_EXISTS, exception.getErrorCode());
