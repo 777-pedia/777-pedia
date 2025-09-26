@@ -1,6 +1,7 @@
 package org.example.pedia_777.domain.review.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.pedia_777.common.dto.AuthMember;
 import org.example.pedia_777.domain.member.entity.Members;
 import org.example.pedia_777.domain.member.service.MemberService;
 import org.example.pedia_777.domain.movie.entity.Movies;
@@ -21,9 +22,9 @@ public class ReviewService {
     private final MovieService movieService;
 
     @Transactional
-    public ReviewResponse createReview(ReviewCreateRequest request) {
-        Members member = memberService.findMemberById(request.memberId());
-        Movies movie = movieService.findMovieById(request.movieId());
+    public ReviewResponse createReview(Long movieId, AuthMember authMember, ReviewCreateRequest request) {
+        Members member = memberService.findMemberById(authMember.id());
+        Movies movie = movieService.findMovieById(movieId);
 
         Review review = Review.create(
                 request.comment(),
