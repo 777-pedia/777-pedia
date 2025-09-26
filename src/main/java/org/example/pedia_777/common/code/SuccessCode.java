@@ -23,7 +23,7 @@ public enum SuccessCode {
 
     // review
     REVIEW_SUCCESS(HttpStatus.OK, "리뷰 생성이 성공적으로 처리되었습니다."),
-    REVIEW_LIST_VIEWED(HttpStatus.OK, "리뷰 불러오기가 성공적으로 처리되었습니다.");
+    REVIEW_LIST_VIEWED(HttpStatus.OK, "리뷰를 찾았습니다.");
 
     // like
 
