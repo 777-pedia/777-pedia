@@ -20,8 +20,7 @@ public class MovieService implements MovieServiceApi {
 
         return MovieDetailResponse.from(findMovieById(movieId));
     }
-
-
+    
     @Override
     public Movie findMovieById(Long movieId) {
         return movieRepository.findById(movieId)
