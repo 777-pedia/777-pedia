@@ -10,7 +10,7 @@ public record MovieDetailResponse(
         String[] actors,
         String[] genres,
         LocalDate releaseDate,
-        int runtime,
+        Integer runtime,
         String country,
         String overview,
         String posterUrl
