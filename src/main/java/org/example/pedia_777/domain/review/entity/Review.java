@@ -50,8 +50,7 @@ public class Review extends BaseTimeEntity {
 
     @Builder
     public Review(String comment, double star, Long likeCount,
-                  LocalDateTime updatedAt, LocalDateTime deletedAt,
-                  Movie movie, Member member) {
+                  LocalDateTime updatedAt, LocalDateTime deletedAt, Movie movie, Member member) {
         this.comment = comment;
         this.star = star;
         this.likeCount = likeCount;
@@ -62,8 +61,7 @@ public class Review extends BaseTimeEntity {
     }
 
     //정적 팩토리 메소드
-    public static Review create(String comment, double star, Long likeCount,
-                                Movie movie, Member member) {
+    public static Review create(String comment, double star, Long likeCount, Movie movie, Member member) {
         return Review.builder()
                 .comment(comment)
                 .star(star)
