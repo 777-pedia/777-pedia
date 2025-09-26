@@ -8,6 +8,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
 
     boolean existsByMemberIdAndReviewId(Long memberId, Long reviewId);
 
-    Optional<Like> findByMemberIdAndReviewId(Long membersId, Long reviewId);
+    Optional<Like> findByMemberIdAndReviewId(Long memberId, Long reviewId);
 
 }
