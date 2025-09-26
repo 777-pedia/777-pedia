@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.pedia_777.common.entity.BaseTimeEntity;
@@ -27,4 +28,17 @@ public class Favorite extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Movie movie;
+
+    @Builder
+    private Favorite(Member member, Movie movie) {
+        this.member = member;
+        this.movie = movie;
+    }
+
+    public static Favorite create(Member member, Movie movie) {
+        return Favorite.builder()
+                .member(member)
+                .movie(movie)
+                .build();
+    }
 }
