@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,8 +27,8 @@ public class Movie extends BaseTimeEntity {
     private String director;
     private String actors;
     private String genres;
-    private LocalDateTime releaseDate;
-    private Long runtime;
+    private LocalDate releaseDate;
+    private Integer runtime;
     private String country;
     private String overview;
     private String posterUrl;
@@ -37,7 +38,7 @@ public class Movie extends BaseTimeEntity {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Movie(String director, String title, String actors, String genres, LocalDateTime releaseDate, Long runtime,
+    public Movie(String director, String title, String actors, String genres, LocalDate releaseDate, Integer runtime,
                  String country, String overview, String posterUrl) {
         this.director = director;
         this.title = title;
@@ -50,8 +51,8 @@ public class Movie extends BaseTimeEntity {
         this.posterUrl = posterUrl;
     }
 
-    public static Movie of(String director, String title, String actors, String genres, LocalDateTime releaseDate,
-                           Long runtime,
+    public static Movie of(String director, String title, String actors, String genres, LocalDate releaseDate,
+                           Integer runtime,
                            String country, String overview, String posterUrl) {
         return Movie.builder()
                 .director(director)
