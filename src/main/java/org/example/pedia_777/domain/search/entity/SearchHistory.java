@@ -1,4 +1,4 @@
-package org.example.pedia_777.domain.searchhistory.entity;
+package org.example.pedia_777.domain.search.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
