@@ -24,14 +24,16 @@ public enum ErrorCode {
     NOT_FOUND_EMAIL_PASSWORD(HttpStatus.NOT_FOUND, "이메일 혹은 비밀번호를 찾을 수 없습니다."),
 
     // favorite
-  
+
     // movie
     MOVIE_NOT_FOUND(HttpStatus.NOT_FOUND, "영화를 찾을 수 없습니다."),
 
     // review
-    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다.");
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),
 
-    // like
+    //like
+    LIKE_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 좋아요를 누른 리뷰입니다."),
+    LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰에 대한 좋아요 기록을 찾을 수 없습니다.");
 
     // search history
 
