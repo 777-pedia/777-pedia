@@ -46,18 +46,16 @@ public class ReviewService implements ReviewServiceApi {
 
     @Transactional(readOnly = true)
     public ReviewPageResponse getComments(Long movieId, Pageable pageable) {
-        // 영화 존재 여부 확인 (없으면 예외 발생)
         movieService.findMovieById(movieId);
 
         // 영화 ID로 리뷰 조회 (페이징 적용)
-        Page<Review> reviewPage = reviewRepository.findByMovies_Id(movieId, pageable);
+        Page<Review> reviewPage = reviewRepository.findByMovie_Id(movieId, pageable);
 
         // 엔티티 -> DTO 매핑
         List<ReviewResponse> content = reviewPage.getContent().stream()
                 .map(ReviewResponse::from)
                 .toList();
 
-        // 레코드 생성
         return new ReviewPageResponse(
                 content,
                 reviewPage.getTotalElements(),
