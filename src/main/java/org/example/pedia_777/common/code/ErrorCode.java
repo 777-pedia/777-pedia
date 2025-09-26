@@ -24,6 +24,7 @@ public enum ErrorCode {
     NOT_FOUND_EMAIL_PASSWORD(HttpStatus.NOT_FOUND, "이메일 혹은 비밀번호를 찾을 수 없습니다."),
 
     // favorite
+    FAVORITE_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 찜을 추가한 영화입니다."),
 
     // movie
     MOVIE_NOT_FOUND(HttpStatus.NOT_FOUND, "영화를 찾을 수 없습니다."),
