@@ -25,7 +25,7 @@ public class LikeController {
 
         LikeResponse response = likeService.addLike(authMember.id(), reviewId);
 
-        return ResponseHelper.success(SuccessCode.LIKE_SUCCESS, response);
+        return ResponseHelper.success(SuccessCode.REQUEST_SUCCESS, response);
     }
 
 }

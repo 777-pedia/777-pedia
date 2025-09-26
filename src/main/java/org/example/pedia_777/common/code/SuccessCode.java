@@ -22,10 +22,9 @@ public enum SuccessCode {
     // movie
 
     // review
-    REVIEW_SUCCESS(HttpStatus.OK, "리뷰 생성이 성공적으로 처리되었습니다."),
+    REVIEW_SUCCESS(HttpStatus.OK, "리뷰 생성이 성공적으로 처리되었습니다.");
 
     // like
-    LIKE_SUCCESS(HttpStatus.OK, "좋아요가 성공적으로 추가되었습니다.");
 
     // search history
 
