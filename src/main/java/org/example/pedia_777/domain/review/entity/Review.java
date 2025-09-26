@@ -19,9 +19,11 @@ import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.movie.entity.Movie;
 import org.springframework.data.annotation.LastModifiedDate;
 
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+
 public class Review extends BaseTimeEntity {
 
     @Id
@@ -47,7 +49,8 @@ public class Review extends BaseTimeEntity {
     private Member member;
 
     @Builder
-    public Review(String comment, double star, Long likeCount, LocalDateTime updatedAt, LocalDateTime deletedAt,
+    public Review(String comment, double star, Long likeCount,
+                  LocalDateTime updatedAt, LocalDateTime deletedAt,
                   Movie movie, Member member) {
         this.comment = comment;
         this.star = star;
@@ -59,7 +62,8 @@ public class Review extends BaseTimeEntity {
     }
 
     //정적 팩토리 메소드
-    public static Review create(String comment, double star, Long likeCount, Movie movie, Member member) {
+    public static Review create(String comment, double star, Long likeCount,
+                                Movie movie, Member member) {
         return Review.builder()
                 .comment(comment)
                 .star(star)

@@ -8,10 +8,8 @@ public record ReviewResponse(
         String comment,
         double star,
         Long likeCount,
-        Long movieId,
-        Long memberId,
-        LocalDateTime updatedAt,
-        LocalDateTime deletedAt
+        String nickname,
+        LocalDateTime createdAt
 ) {
     public static ReviewResponse from(Review review) {
         return new ReviewResponse(
@@ -19,10 +17,8 @@ public record ReviewResponse(
                 review.getComment(),
                 review.getStar(),
                 review.getLikeCount(),
-                review.getMovie().getId(),
-                review.getMember().getId(),
-                review.getUpdatedAt(),
-                review.getDeletedAt()
+                review.getMember().getNickname(),
+                review.getCreatedAt()
         );
     }
 }
