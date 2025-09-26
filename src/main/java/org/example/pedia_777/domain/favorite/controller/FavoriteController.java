@@ -21,7 +21,7 @@ public class FavoriteController {
 
     private final FavoriteService favoriteService;
 
-    @PostMapping("/{movieId}/hearts")
+    @PostMapping("/{movieId}/favorites")
     public ResponseEntity<GlobalApiResponse<FavoriteAddResponse>> addHeart(
             @AuthenticationPrincipal AuthMember authMember,
             @PathVariable Long movieId) {
