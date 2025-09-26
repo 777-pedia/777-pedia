@@ -4,15 +4,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.example.pedia_777.common.exception.BusinessException;
 import org.example.pedia_777.domain.favorite.code.FavoriteErrorCode;
 import org.example.pedia_777.domain.favorite.dto.response.FavoriteAddResponse;
+import org.example.pedia_777.domain.favorite.dto.response.FavoriteMovieResponse;
 import org.example.pedia_777.domain.favorite.entity.Favorite;
 import org.example.pedia_777.domain.favorite.repository.FavoriteRepository;
 import org.example.pedia_777.domain.member.entity.Member;
@@ -26,6 +29,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.example.pedia_777.common.dto.PageResponse;
 
 @ExtendWith(MockitoExtension.class)
 class FavoriteServiceTest {
@@ -103,6 +111,36 @@ class FavoriteServiceTest {
 
         assertEquals(FavoriteErrorCode.FAVORITE_ALREADY_EXISTS, exception.getErrorCode());
         verify(favoriteRepository, never()).save(any(Favorite.class));
+    }
+
+    @Test
+    @DisplayName("회원은 페이징을 사용해 찜한 영화 목록을 조회할 수 있다.")
+    void getFavoriteMoviesSuccess() {
+
+        // given
+        Favorite favorite = Favorite.create(testMember, testMovie);
+        LocalDateTime now = LocalDateTime.now();
+
+        ReflectionTestUtils.setField(testMovie, "id", movieId);
+        ReflectionTestUtils.setField(favorite, "createdAt", now);
+
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        PageImpl<Favorite> favorites = new PageImpl<>(List.of(favorite), pageRequest, 1);
+
+        given(favoriteRepository.findAllByMemberId(eq(memberId), any(Pageable.class))).willReturn(favorites);
+
+        // when
+        PageResponse<FavoriteMovieResponse> result = favoriteService.getFavoriteMovies(memberId, pageRequest);
+
+        // then
+        assertThat(result.content()).hasSize(1);
+        FavoriteMovieResponse movieResponse = result.content().get(0);
+        assertThat(movieResponse.movieId()).isEqualTo(movieId);
+        assertThat(movieResponse.title()).isEqualTo(testMovie.getTitle());
+        assertThat(movieResponse.director()).isEqualTo(testMovie.getDirector());
+        assertThat(movieResponse.genres()).isEqualTo(testMovie.getGenres());
+        assertThat(movieResponse.favoriteAddedAt()).isEqualTo(now);
+        assertThat(result.totalElements()).isEqualTo(1);
     }
 
 }
