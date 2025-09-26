@@ -8,7 +8,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Optional;
 import org.example.pedia_777.common.exception.BusinessException;
 import org.example.pedia_777.domain.favorite.code.FavoriteErrorCode;
@@ -43,6 +43,7 @@ class FavoriteServiceTest {
     // 테스트 데이터
     private Member testMember;
     private Movie testMovie;
+    private Movie testMovie2;
 
     @BeforeEach
     void setUp() {
@@ -57,11 +58,23 @@ class FavoriteServiceTest {
                 "테스트 영화",
                 "배우1, 배우2",
                 "코미디",
-                LocalDateTime.now(),
-                120L,
+                LocalDate.now(),
+                120,
                 "한국",
                 "영화 줄거리",
                 "http://test.url"
+        );
+
+        testMovie2 = Movie.of(
+                "감독2",
+                "테스트 영화2",
+                "배우3, 배우4",
+                "스릴러",
+                LocalDate.now(),
+                120,
+                "한국",
+                "영화 줄거리2",
+                "http://test.url2"
         );
     }
 
