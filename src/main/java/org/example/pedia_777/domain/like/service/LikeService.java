@@ -22,10 +22,10 @@ public class LikeService implements LikeServiceApi {
     private final MemberServiceApi memberServiceApi;
 
     @Transactional
-    public LikeResponse addLike(Long reviewId, long memberId) {
+    public LikeResponse addLike(Long reviewId, Long memberId) {
 
         //동시성 이슈 발생 가능1
-        if (likeRepository.existsByMemberIdAndReviewId(reviewId, memberId)) {
+        if (likeRepository.existsByMemberIdAndReviewId(memberId, reviewId)) {
             throw new BusinessException(ErrorCode.LIKE_ALREADY_EXISTS);
         }
 

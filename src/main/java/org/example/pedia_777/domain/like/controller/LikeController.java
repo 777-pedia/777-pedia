@@ -21,7 +21,7 @@ public class LikeController {
     public GlobalApiResponse<LikeResponse> addLike(
             @PathVariable Long reviewId, @AuthenticationPrincipal AuthMember authMember) {
 
-        LikeResponse response = likeService.addLike(reviewId, authMember.id());
+        LikeResponse response = likeService.addLike(authMember.id(), reviewId);
 
         return GlobalApiResponse.success(SuccessCode.REQUEST_SUCCESS, response);
     }

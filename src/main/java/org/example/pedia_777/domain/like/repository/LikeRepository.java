@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
-    boolean existsByMemberIdAndReviewId(Long membersId, Long reviewId);
+    boolean existsByMemberIdAndReviewId(Long memberId, Long reviewId);
 
 }
