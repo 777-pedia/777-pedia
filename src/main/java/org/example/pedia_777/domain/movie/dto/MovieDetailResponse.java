@@ -1,6 +1,6 @@
 package org.example.pedia_777.domain.movie.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import org.example.pedia_777.domain.movie.entity.Movie;
 
 public record MovieDetailResponse(
@@ -9,8 +9,8 @@ public record MovieDetailResponse(
         String director,
         String actors,
         String genres,
-        LocalDateTime releaseDate,
-        Long runtime,
+        LocalDate releaseDate,
+        int runtime,
         String country,
         String overview,
         String posterUrl
