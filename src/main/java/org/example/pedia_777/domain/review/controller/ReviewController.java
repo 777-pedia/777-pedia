@@ -52,7 +52,7 @@ public class ReviewController {
 
         // 페이지와 정렬 조건을 포함한 pageable 생성 (페이지 시작값을 1로 설정)
         Pageable pageable = PageRequest.of(Math.max(0, page - 1), size, sortOrder);
-        ReviewPageResponse response = reviewService.getComments(movieId, pageable);
+        ReviewPageResponse response = reviewService.getReviews(movieId, pageable);
         return ResponseHelper.success(SuccessCode.REVIEW_LIST_VIEWED, response);
     }
 }

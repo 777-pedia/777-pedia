@@ -45,7 +45,7 @@ public class ReviewService implements ReviewServiceApi {
     }
 
     @Transactional(readOnly = true)
-    public ReviewPageResponse getComments(Long movieId, Pageable pageable) {
+    public ReviewPageResponse getReviews(Long movieId, Pageable pageable) {
         movieService.findMovieById(movieId);
 
         // 영화 ID로 리뷰 조회 (페이징 적용)
