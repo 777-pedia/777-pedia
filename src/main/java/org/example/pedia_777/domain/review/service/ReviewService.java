@@ -51,14 +51,14 @@ public class ReviewService implements ReviewServiceApi {
         movieServiceApi.findMovieById(movieId);
 
         Sort sortOrder;
-        if (sort == ReviewSort.NEWEST) {
-            sortOrder = Sort.by("createdAt").descending();
-        } else if (sort == ReviewSort.OLDEST) {
-            sortOrder = Sort.by("createdAt").ascending();
-        } else {
+        if (sort == null || sort == ReviewSort.LIKES) {
             sortOrder = Sort.by(Sort.Order.desc("likeCount"), Sort.Order.desc("createdAt"));
+        } else if (sort == ReviewSort.NEWEST) {
+            sortOrder = Sort.by("createdAt").descending();
+        } else { // OLDEST
+            sortOrder = Sort.by("createdAt").ascending();
         }
-        
+
         // 영화 ID로 리뷰 조회 (페이징 적용)
         Pageable pageable = PageRequest.of(Math.max(0, page - 1), size, sortOrder);
         Page<Review> reviewPage = reviewRepository.findByMovieId(movieId, pageable);
