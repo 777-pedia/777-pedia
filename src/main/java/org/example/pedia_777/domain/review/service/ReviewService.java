@@ -1,6 +1,7 @@
 package org.example.pedia_777.domain.review.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.pedia_777.common.code.CommonErrorCode;
 import org.example.pedia_777.common.dto.AuthMember;
 import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.exception.BusinessException;
@@ -10,6 +11,7 @@ import org.example.pedia_777.domain.movie.entity.Movie;
 import org.example.pedia_777.domain.movie.service.MovieServiceApi;
 import org.example.pedia_777.domain.review.code.ReviewErrorCode;
 import org.example.pedia_777.domain.review.dto.request.ReviewCreateRequest;
+import org.example.pedia_777.domain.review.dto.request.ReviewUpdateRequest;
 import org.example.pedia_777.domain.review.dto.response.ReviewResponse;
 import org.example.pedia_777.domain.review.entity.Review;
 import org.example.pedia_777.domain.review.repository.ReviewRepository;
@@ -54,6 +56,21 @@ public class ReviewService implements ReviewServiceApi {
         Page<ReviewResponse> reviewResponsePage = reviewPage.map(ReviewResponse::from);
 
         return PageResponse.from(reviewResponsePage);
+    }
+
+    @Transactional
+    public ReviewResponse updateReview(Long reviewId, AuthMember authMember, ReviewUpdateRequest request) {
+        Review review = reviewRepository.findByIdAndMemberId(reviewId, authMember.id())
+                .orElseThrow(() -> new BusinessException(CommonErrorCode.VALIDATION_FAILED));
+        review.update(request);
+        return ReviewResponse.from(review);
+    }
+
+    @Transactional
+    public void deleteReview(Long reviewId, AuthMember authMember) {
+        Review review = reviewRepository.findByIdAndMemberId(reviewId, authMember.id())
+                .orElseThrow(() -> new BusinessException(CommonErrorCode.VALIDATION_FAILED));
+        reviewRepository.delete(review);
     }
 
     @Override

@@ -9,6 +9,7 @@ import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.util.ResponseHelper;
 import org.example.pedia_777.domain.review.code.ReviewSuccessCode;
 import org.example.pedia_777.domain.review.dto.request.ReviewCreateRequest;
+import org.example.pedia_777.domain.review.dto.request.ReviewUpdateRequest;
 import org.example.pedia_777.domain.review.dto.response.ReviewResponse;
 import org.example.pedia_777.domain.review.entity.ReviewSort;
 import org.example.pedia_777.domain.review.service.ReviewService;
@@ -17,8 +18,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,5 +65,24 @@ public class ReviewController {
         Pageable pageable = PageRequest.of(Math.max(0, page - 1), size, sortOrder);
         PageResponse<ReviewResponse> response = reviewService.getReviews(movieId, pageable);
         return ResponseHelper.success(ReviewSuccessCode.REVIEW_LIST_VIEWED, response);
+    }
+
+    @PutMapping("/reviews/{reviewId}")
+    public ResponseEntity<GlobalApiResponse<ReviewResponse>> updateReview(
+            @PathVariable Long reviewId,
+            @AuthenticationPrincipal AuthMember authMember,
+            @RequestBody ReviewUpdateRequest request) {
+
+        ReviewResponse response = reviewService.updateReview(reviewId, authMember, request);
+        return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS, response);
+    }
+
+    @DeleteMapping("/reviews/{reviewId}")
+    public ResponseEntity<GlobalApiResponse<Void>> deleteReview(
+            @PathVariable Long reviewId,
+            @AuthenticationPrincipal AuthMember authMember) {
+
+        reviewService.deleteReview(reviewId, authMember);
+        return ResponseHelper.success(CommonSuccessCode.DELETED_SUCCESS);
     }
 }
