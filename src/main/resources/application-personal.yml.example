@@ -1,0 +1,17 @@
+# 개인이 스스로 적용하거나 수정하면서 사용할 설정들을 자유롭게 작성합니다. (jpa 설정, 로깅 레벨 등)
+# 작성후 local group 적용을 위해 반드시 application-personal.yml 파일에 저장하여 사용하세요.
+# 참고하여 작성해야 하는 템플릿이 아니고 단순 예시입니다!
+# 이 파일은 수정하지 마세요! 변경 내역이 git 변경 내역에 같이 포함됩니다.
+
+# 아래는 개인마다 상황에 따라 다르게 작성한 예시입니다.
+# local에 동일한 key가 존재하더라도 여기서 작성한 값으로 덮어씌워집니다.
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
