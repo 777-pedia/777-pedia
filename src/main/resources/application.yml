@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: pedia_777
+
+  profiles:
+    group:
+      local: personal
