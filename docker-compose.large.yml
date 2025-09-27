@@ -1,0 +1,43 @@
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: movie-review-mysql
+    restart: unless-stopped
+    ports:
+      - "${DB_PORT}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      TZ: Asia/Seoul
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+09:00
+
+      # 대용량 더미 임포트를 위한 추가 설정
+      - --max_allowed_packet=1G
+      - --innodb_buffer_pool_size=2G
+      - --innodb-redo-log-capacity=1G
+      - --innodb_flush_log_at_trx_commit=2
+      - --innodb_doublewrite=0
+
+  redis-db:
+    image: redis:7.2
+    container_name: movie-review-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - redis-data:/data
+    #      - ./config/redis.conf:/usr/local/etc/redis/redis.conf #로컬의 개인 설정 파일을 컨테이너 내부로 연결
+    command: redis-server --appendonly yes
+#    command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes # 연결된 설정 파일을 사용하여 Redis 서버 실행
+
+volumes:
+  mysql-data:
+  redis-data:
