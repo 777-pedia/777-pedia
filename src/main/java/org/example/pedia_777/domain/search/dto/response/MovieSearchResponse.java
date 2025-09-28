@@ -1,4 +1,4 @@
-package org.example.pedia_777.domain.search.dto.respoonse;
+package org.example.pedia_777.domain.search.dto.response;
 
 import static org.example.pedia_777.common.util.StringHelper.splitSafely;
 

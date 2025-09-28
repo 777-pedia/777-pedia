@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.pedia_777.domain.favorite.entity.QFavorite;
 import org.example.pedia_777.domain.movie.entity.QMovie;
 import org.example.pedia_777.domain.review.entity.QReview;
-import org.example.pedia_777.domain.search.dto.respoonse.MovieSearchProjection;
+import org.example.pedia_777.domain.search.dto.response.MovieSearchProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -37,8 +37,8 @@ public class MovieRepositoryCustomImpl implements MovieRepositoryCustom {
                                 favorite.id.countDistinct()
                         ))
                 .from(movie)
-                .leftJoin(review).on((review.movie.id.eq(movie.id)))
-                .leftJoin(favorite).on((favorite.movie.id.eq(movie.id)))
+                .leftJoin(review).on(review.movie.id.eq(movie.id))
+                .leftJoin(favorite).on(favorite.movie.id.eq(movie.id))
                 .where(movie.title.containsIgnoreCase(keyword)
                         .or(movie.director.containsIgnoreCase(keyword))
                         .or(movie.actors.containsIgnoreCase(keyword)))

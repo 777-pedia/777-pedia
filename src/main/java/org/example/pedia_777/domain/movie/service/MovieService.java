@@ -6,7 +6,7 @@ import org.example.pedia_777.domain.movie.code.MovieErrorCode;
 import org.example.pedia_777.domain.movie.dto.MovieDetailResponse;
 import org.example.pedia_777.domain.movie.entity.Movie;
 import org.example.pedia_777.domain.movie.repository.MovieRepository;
-import org.example.pedia_777.domain.search.dto.respoonse.MovieSearchResponse;
+import org.example.pedia_777.domain.search.dto.response.MovieSearchResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

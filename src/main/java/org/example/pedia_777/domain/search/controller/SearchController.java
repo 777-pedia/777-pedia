@@ -5,7 +5,7 @@ import org.example.pedia_777.common.code.CommonSuccessCode;
 import org.example.pedia_777.common.dto.GlobalApiResponse;
 import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.util.ResponseHelper;
-import org.example.pedia_777.domain.search.dto.respoonse.MovieSearchResponse;
+import org.example.pedia_777.domain.search.dto.response.MovieSearchResponse;
 import org.example.pedia_777.domain.search.service.SearchService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
