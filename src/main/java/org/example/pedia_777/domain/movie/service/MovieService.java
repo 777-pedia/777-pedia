@@ -6,6 +6,9 @@ import org.example.pedia_777.domain.movie.code.MovieErrorCode;
 import org.example.pedia_777.domain.movie.dto.MovieDetailResponse;
 import org.example.pedia_777.domain.movie.entity.Movie;
 import org.example.pedia_777.domain.movie.repository.MovieRepository;
+import org.example.pedia_777.domain.search.dto.response.MovieSearchResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +23,16 @@ public class MovieService implements MovieServiceApi {
 
         return MovieDetailResponse.from(findMovieById(movieId));
     }
-    
+
     @Override
     public Movie findMovieById(Long movieId) {
         return movieRepository.findById(movieId)
                 .orElseThrow(() -> new BusinessException(MovieErrorCode.MOVIE_NOT_FOUND));
+    }
+
+    @Override
+    public Page<MovieSearchResponse> searchMovies(String keyword, Pageable pageable) {
+        return movieRepository.searchMovies(keyword, pageable)
+                .map(MovieSearchResponse::from);
     }
 }

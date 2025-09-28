@@ -2,6 +2,7 @@ package org.example.pedia_777.common.exception;
 
 import jakarta.validation.ConstraintViolationException;
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 import org.example.pedia_777.common.code.CommonErrorCode;
 import org.example.pedia_777.common.dto.GlobalApiResponse;
 import org.example.pedia_777.common.util.ResponseHelper;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -32,6 +34,7 @@ public class GlobalExceptionHandler {
     // 정의되지 않은 내부 Exception 일괄 처리
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GlobalApiResponse<Void>> handleException(Exception e) {
+        log.error("[GlobalExceptionHandler] 정의되지 않은 Exception: {}", e.getMessage(), e);
         return ResponseHelper.error(CommonErrorCode.INTERNAL_SERVER_ERROR);
     }
 
