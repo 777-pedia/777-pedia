@@ -24,7 +24,7 @@ class SearchServicePerformanceTest {
     @DisplayName("영화 검색 간단 성능 테스트")
     void searchMovies_performanceTest() {
 
-        String keyword = "위대한";
+        String keyword = "영웅";
         int PAGE_SIZE = 30;
         int TOTAL_ITERATIONS = 13;
         int WARMUP_ITERATIONS = 3;
@@ -40,7 +40,7 @@ class SearchServicePerformanceTest {
             var result = searchService.searchMovies(keyword, pageable);
 
             stopWatch.stop();
-            long diff = stopWatch.getTotalTimeMillis();
+            long diff = stopWatch.lastTaskInfo().getTimeMillis();
 
             if (i <= WARMUP_ITERATIONS) {
                 log.info("[{} Warm-up] 검색된 영화 수 = {}, 실행 시간 = {} ms",
