@@ -161,7 +161,6 @@ public class LikeServiceTest {
         //given
         int invalidPage = -1;
         int size = 10;
-        Long memberId = 1L;
 
         Sort sort = Sort.by("createdAt").descending();
         Pageable expectedPageable = PageRequest.of(0, size, sort);  // Math.max(0, -1-1) = 0
@@ -169,7 +168,7 @@ public class LikeServiceTest {
         Like like1 = Like.of(mockMember, mockReview);
 
         given(likeRepository.findByMemberId(memberId, expectedPageable)).willReturn(
-                new PageImpl<>(List.of(like1), expectedPageable, 0));
+                new PageImpl<>(List.of(like1), expectedPageable, 1));
 
         //when
         PageResponse<LikedReviewResponse> result = likeService.getLikedReviews(memberId, invalidPage, size);
@@ -185,7 +184,6 @@ public class LikeServiceTest {
         //given
         int page = 1;
         int size = 10;
-        Long memberId = 1L;
 
         Sort sort = Sort.by("createdAt").descending();
         Pageable pageable = PageRequest.of(0, size, sort);
