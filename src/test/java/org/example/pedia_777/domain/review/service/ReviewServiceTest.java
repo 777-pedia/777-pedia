@@ -1,7 +1,6 @@
 package org.example.pedia_777.domain.review.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -59,7 +58,7 @@ class ReviewServiceTest {
         movie = Movie.of(
                 "김박수", "고릴라", "김이박, 김삼순",
                 "드라마", LocalDate.now(), 132,
-                "한국", "test", "test."
+                "한국", "test", "testUrl"
         );
 
         review = Review.create("재밌는 영화", 4.5, 0L, movie, member);
@@ -91,7 +90,7 @@ class ReviewServiceTest {
         // given
         Long reviewId = 1L;
         AuthMember authMember = new AuthMember(1L, member.getEmail(), member.getNickname());
-        ReviewUpdateRequest request = new ReviewUpdateRequest("수정된 내용", 5);
+        ReviewUpdateRequest request = new ReviewUpdateRequest("수정된 내용", 5.0);
 
         given(reviewRepository.findByIdAndMemberId(reviewId, authMember.id())).willReturn(Optional.of(review));
 
@@ -111,7 +110,7 @@ class ReviewServiceTest {
         // given
         Long reviewId = 1L;
         AuthMember authMember = new AuthMember(2L, "JJIN@test.com", "JJIN");
-        ReviewUpdateRequest request = new ReviewUpdateRequest("수정된 내용", 5);
+        ReviewUpdateRequest request = new ReviewUpdateRequest("수정된 내용", 5.0);
 
         given(reviewRepository.findByIdAndMemberId(reviewId, authMember.id())).willReturn(Optional.empty());
 
@@ -179,8 +178,10 @@ class ReviewServiceTest {
         given(reviewRepository.findById(99L)).willReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> reviewService.findReviewById(99L))
-                .isInstanceOf(BusinessException.class)
-                .hasMessage(ReviewErrorCode.REVIEW_NOT_FOUND.getMessage());
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> reviewService.findReviewById(99L));
+
+        // then
+        assertEquals(ReviewErrorCode.REVIEW_NOT_FOUND, exception.getErrorCode());
     }
 }
