@@ -1,0 +1,24 @@
+# Spring Active Profile 환경 변수
+SPRING_PROFILES_ACTIVE=local
+
+# MySQL Spring & Docker 공통 환경 변수
+DB_DATABASE=movie_review_db
+DB_USERNAME=user
+DB_PASSWORD=password
+
+# application.yml Spring Datasource 환경 변수
+DB_HOST=localhost
+DB_PORT=3307
+
+# application.yml Spring Data Redis 환경 변수
+REDIS_HOST=localhost
+REDIS_PORT=6380
+
+# docker-compose.yml MySQL Docker Container 단독 환경 변수
+DB_ROOT_PASSWORD=root_password
+
+# jwt 환경 변수
+JWT_SECRET_KEY=mySecretKeyForJWTGeneration1234567890mySecretKeyForJWTGeneration1234567890
+
+# Server 환경 변수
+SERVER_PORT=8080
