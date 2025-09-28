@@ -26,13 +26,14 @@ class SearchServicePerformanceTest {
 
         String keyword = "위대한";
         int PAGE_SIZE = 30;
-        int ITERATIONS = 10;
+        int TOTAL_ITERATIONS = 13;
+        int WARMUP_ITERATIONS = 3;
 
         PageRequest pageable = PageRequest.of(0, PAGE_SIZE);
 
         List<Long> executionTimes = new ArrayList<>();
 
-        for (int i = 1; i <= ITERATIONS; i++) {
+        for (int i = 1; i <= TOTAL_ITERATIONS; i++) {
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
 
@@ -40,10 +41,15 @@ class SearchServicePerformanceTest {
 
             stopWatch.stop();
             long diff = stopWatch.getTotalTimeMillis();
-            executionTimes.add(diff);
 
-            log.info("[{} iteration] 반환한 영화 수 = {}, 실행 시간 = {} ms",
-                    i, result.totalElements(), diff);
+            if (i <= WARMUP_ITERATIONS) {
+                log.info("[{} Warm-up] 검색된 영화 수 = {}, 실행 시간 = {} ms",
+                        i, result.totalElements(), diff);
+            } else {
+                executionTimes.add(diff);
+                log.info("[{} iteration] 검색된 영화 수 = {}, 실행 시간 = {} ms",
+                        i - WARMUP_ITERATIONS, result.totalElements(), diff);
+            }
         }
 
         // 평균 시간 계산
@@ -52,6 +58,9 @@ class SearchServicePerformanceTest {
                 .average()
                 .orElse(0);
 
-        log.info("{}회 실행, 평균 실행 시간 = {} ms", ITERATIONS, average);
+        log.info("{}회 실행 (Warm-up {}회 제외), 평균 실행 시간 = {} ms",
+                TOTAL_ITERATIONS - WARMUP_ITERATIONS,
+                WARMUP_ITERATIONS,
+                average);
     }
 }
