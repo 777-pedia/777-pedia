@@ -39,9 +39,9 @@ public class MovieRepositoryCustomImpl implements MovieRepositoryCustom {
                 .from(movie)
                 .leftJoin(review).on(review.movie.id.eq(movie.id))
                 .leftJoin(favorite).on(favorite.movie.id.eq(movie.id))
-                .where(movie.title.startsWithIgnoreCase(keyword)
-                        .or(movie.director.startsWithIgnoreCase(keyword))
-                        .or(movie.actors.startsWithIgnoreCase(keyword)))
+                .where(movie.title.containsIgnoreCase(keyword)
+                        .or(movie.director.containsIgnoreCase(keyword))
+                        .or(movie.actors.containsIgnoreCase(keyword)))
                 .groupBy(movie.id)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -51,9 +51,9 @@ public class MovieRepositoryCustomImpl implements MovieRepositoryCustom {
         JPAQuery<Long> countQuery = queryFactory
                 .select(movie.count())
                 .from(movie)
-                .where(movie.title.startsWithIgnoreCase(keyword)
-                        .or(movie.director.startsWithIgnoreCase(keyword))
-                        .or(movie.actors.startsWithIgnoreCase(keyword)));
+                .where(movie.title.containsIgnoreCase(keyword)
+                        .or(movie.director.containsIgnoreCase(keyword))
+                        .or(movie.actors.containsIgnoreCase(keyword)));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
