@@ -13,7 +13,9 @@ import org.example.pedia_777.domain.member.service.MemberServiceApi;
 import org.example.pedia_777.domain.review.entity.Review;
 import org.example.pedia_777.domain.review.service.ReviewServiceApi;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,7 +62,10 @@ public class LikeService implements LikeServiceApi {
         return LikeResponse.of(reviewId, currentReview.getLikeCount(), false);
     }
 
-    public PageResponse<LikedReviewResponse> getLikedReviews(Long memberId, Pageable pageable) {
+    public PageResponse<LikedReviewResponse> getLikedReviews(Long memberId, int page, int size) {
+
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(Math.max(0, page - 1), size, sort);
 
         Page<Like> likedReviewPage = likeRepository.findByMemberId(memberId, pageable);
 

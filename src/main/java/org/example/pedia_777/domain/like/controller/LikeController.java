@@ -9,9 +9,6 @@ import org.example.pedia_777.common.util.ResponseHelper;
 import org.example.pedia_777.domain.like.dto.response.LikeResponse;
 import org.example.pedia_777.domain.like.dto.response.LikedReviewResponse;
 import org.example.pedia_777.domain.like.service.LikeService;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,13 +47,11 @@ public class LikeController {
     @GetMapping("/likes")
     public ResponseEntity<GlobalApiResponse<PageResponse<LikedReviewResponse>>> getLikedReviews(
             @AuthenticationPrincipal AuthMember authMember,
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Sort sort = Sort.by("createdAt").descending();
-        Pageable pageable = PageRequest.of(Math.max(0, page - 1), size, sort);
 
-        PageResponse<LikedReviewResponse> response = likeService.getLikedReviews(authMember.id(), pageable);
+        PageResponse<LikedReviewResponse> response = likeService.getLikedReviews(authMember.id(), page, size);
 
         return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS, response);
     }
