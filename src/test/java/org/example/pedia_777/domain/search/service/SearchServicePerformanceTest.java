@@ -3,6 +3,7 @@ package org.example.pedia_777.domain.search.service;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import org.springframework.util.StopWatch;
 
 @Slf4j
 @ActiveProfiles("local")
-//@Disabled("성능 테스트는 필요한 경우 로컬 환경에서만 실행합니다.")
+@Disabled("성능 테스트는 필요한 경우 로컬 환경에서만 실행합니다.")
 @SpringBootTest
 class SearchServicePerformanceTest {
 
