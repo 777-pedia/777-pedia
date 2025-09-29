@@ -8,13 +8,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum CacheType {
 
-    MOVIE_SEARCH("movieSearch", Duration.ofMinutes(10)), // 10분
-    POPULAR_KEYWORDS("popularKeywords", Duration.ofMinutes(120)), // 2시간
-    IS_POPULAR_KEYWORD("isPopularKeyword", Duration.ofMinutes(1)); // 1분
+    MOVIE_SEARCH_CURRENT_POPULAR("movieSearchCurrentPopular", Duration.ofMinutes(5)), // 5분
+    MOVIE_SEARCH_PREV_POPULAR("movieSearchPrevPopular", Duration.ofMinutes(120)), // 2시간
+    POPULAR_KEYWORDS("popularKeywords", Duration.ofMinutes(120)); // 2시간
 
-    public static final String MOVIE_SEARCH_NAME = "movieSearch";
-    public static final String POPULAR_KEYWORDS_NAME = "popularKeywords";
-    public static final String IS_POPULAR_KEYWORD_NAME = "isPopularKeyword";
+    public static final String NAME_MOVIE_SEARCH_CURRENT_POPULAR = "movieSearchCurrentPopular";
+    public static final String NAME_MOVIE_SEARCH_PREV_POPULAR = "movieSearchPrevPopular";
+    public static final String NAME_POPULAR_KEYWORDS = "popularKeywords";
 
     private final String cacheName;
     private final Duration ttl;
