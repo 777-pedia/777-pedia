@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 
 @RequiredArgsConstructor
-public class MovieRepositoryCustomImpl implements MovieRepositoryCustom {
+public class MovieSearchRepositoryImpl implements MovieSearchRepository {
 
     private final JPAQueryFactory queryFactory;
 
