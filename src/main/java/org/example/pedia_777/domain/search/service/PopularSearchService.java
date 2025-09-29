@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.pedia_777.common.config.CacheType;
 import org.example.pedia_777.domain.search.dto.response.PopularKeywordResponse;
+import org.example.pedia_777.domain.search.entity.PopularType;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -34,15 +35,17 @@ public class PopularSearchService {
     }
 
     // 이전 시간대(정각 ~ 정각 사이)의 인기 검색어 10개 조회
-    @Cacheable(value = CacheType.POPULAR_KEYWORDS_NAME, cacheManager = "redisCacheManager",
+    @Cacheable(cacheNames = CacheType.NAME_POPULAR_KEYWORDS, cacheManager = "redisCacheManager",
             key = "#root.methodName + ':' + #root.target.getPreviousHourKey()")
     public List<PopularKeywordResponse> getPopularKeywordsOfPreviousHour() {
+
+        log.debug("[PopularSearchService] 인기 검색어 목록을 Redis에서 조회합니다.");
 
         // 이전 시간대의 Key를 가져와서 ZREVRANGE 실행
         String previousKey = getPreviousHourKey();
         Set<String> topKeywords = redisTemplate.opsForZSet().reverseRange(previousKey, 0, 9);
 
-        log.debug(Objects.requireNonNull(topKeywords).toString());
+        log.debug("[PopularSearchService] 인기 검색어 목록: {}", Objects.requireNonNull(topKeywords));
 
         List<String> keywordList = new ArrayList<>(topKeywords);
         return IntStream.range(0, keywordList.size())
@@ -50,6 +53,23 @@ public class PopularSearchService {
                 .collect(Collectors.toList());
     }
 
+    // 특정 키워드가 현재 또는 이전 인기 검색어에 포함되는지 확인
+    public PopularType checkPopularity(String keyword) {
+
+        String currentKey = getCurrentHourKey();
+        Set<String> currentPopularKeywords = redisTemplate.opsForZSet().reverseRange(currentKey, 0, 9);
+        if (currentPopularKeywords != null && currentPopularKeywords.contains(keyword)) {
+            return PopularType.CURRENT;
+        }
+
+        String previousKey = getPreviousHourKey();
+        Long previousRank = redisTemplate.opsForZSet().reverseRank(previousKey, keyword);
+        if (previousRank != null && previousRank < 10) {
+            return PopularType.PREVIOUS;
+        }
+
+        return PopularType.NONE;
+    }
 
     // 현재 시간을 기준으로 Key를 생성 (e.g.: 4시 1분, 4시 30분 -> 4시 "popularKeywords:2025092804")
     private String getCurrentHourKey() {
