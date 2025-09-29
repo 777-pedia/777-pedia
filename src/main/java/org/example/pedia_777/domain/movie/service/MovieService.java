@@ -34,5 +34,11 @@ public class MovieService implements MovieServiceApi {
     public Page<MovieSearchResponse> searchMovies(String keyword, Pageable pageable) {
         return movieRepository.searchMovies(keyword, pageable)
                 .map(MovieSearchResponse::from);
+
+        // fulltext index 테스트를 위한 코드, 삭제 예정
+//        String fullTextKeyword = keyword;
+//        String fullTextKeyword = "+" + keyword + "*";
+//        return movieRepository.searchMoviesNative(fullTextKeyword, pageable)
+//                .map(MovieSearchResponse::from);
     }
 }

@@ -28,4 +28,13 @@ public class SearchController {
         return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS,
                 searchService.searchMovies(keyword, pageable));
     }
+
+    @GetMapping("/api/v2/search")
+    public ResponseEntity<GlobalApiResponse<PageResponse<MovieSearchResponse>>> searchMoviesWithLocalCache(
+            @RequestParam String keyword,
+            @PageableDefault(size = 10) Pageable pageable) {
+
+        return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS,
+                searchService.searchMoviesWithLocalCache(keyword, pageable));
+    }
 }
