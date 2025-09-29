@@ -29,11 +29,11 @@ public class SearchService {
             key = "'search:' + #keyword.trim().toLowerCase() + ':' + #pageable.pageNumber + ':' + #pageable.pageSize",
             condition = "#keyword != null && #keyword.trim().length() <= 30 && #pageable.pageSize <= 30 && #pageable.pageNumber <= 3",
             unless = "#result == null || #result.content.isEmpty()")
-    public PageResponse<MovieSearchResponse> searchMoviesWithLocalCache(String keyword, Pageable pageable) {
+    public PageResponse<MovieSearchResponse> searchMoviesWithCache(String keyword, Pageable pageable) {
 
-        log.info("[SearchService] searchMoviesWithLocalCache DB 연결 | keyword: {}, pageSize: {}, pageNumber: {}",
-                keyword,
-                pageable.getPageSize(), pageable.getPageNumber());
+        log.debug("[SearchService] searchMoviesWithCache Cache miss: keyword: {}, pageSize: {}, pageNumber: {}",
+                keyword, pageable.getPageSize(), pageable.getPageNumber());
+
         popularSearchService.incrementSearchKeyword(keyword);
         return PageResponse.from(movieService.searchMovies(keyword, pageable));
     }
