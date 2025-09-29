@@ -23,5 +23,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     // 비관적 락 적용
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select r from Review r where r.id = :reviewId")
-    Optional<Review> findByIdForUpdate(@Param("id") Long id);
+    Optional<Review> findByIdForUpdate(@Param("reviewId") Long id);
 }
