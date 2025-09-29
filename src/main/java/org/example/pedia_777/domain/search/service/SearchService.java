@@ -20,7 +20,6 @@ public class SearchService {
 
     public PageResponse<MovieSearchResponse> searchMovies(String keyword, Pageable pageable) {
 
-        popularSearchService.incrementSearchKeyword(keyword);
         return PageResponse.from(movieService.searchMovies(keyword, pageable));
     }
 
@@ -34,7 +33,6 @@ public class SearchService {
         log.debug("[SearchService] searchMoviesWithCache Cache miss: keyword: {}, pageSize: {}, pageNumber: {}",
                 keyword, pageable.getPageSize(), pageable.getPageNumber());
 
-        popularSearchService.incrementSearchKeyword(keyword);
         return PageResponse.from(movieService.searchMovies(keyword, pageable));
     }
 

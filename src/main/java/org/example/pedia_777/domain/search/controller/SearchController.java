@@ -30,6 +30,7 @@ public class SearchController {
             @RequestParam String keyword,
             @PageableDefault(size = 10) Pageable pageable) {
 
+        popularSearchService.incrementSearchKeyword(keyword);
         return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS,
                 searchService.searchMovies(keyword, pageable));
     }
@@ -40,6 +41,7 @@ public class SearchController {
             @RequestParam String keyword,
             @PageableDefault(size = 10) Pageable pageable) {
 
+        popularSearchService.incrementSearchKeyword(keyword);
         return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS,
                 searchService.searchMoviesWithCache(keyword, pageable));
     }
