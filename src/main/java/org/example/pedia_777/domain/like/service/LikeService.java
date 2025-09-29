@@ -42,9 +42,10 @@ public class LikeService implements LikeServiceApi {
         likeRepository.save(Like.of(currentMember, currentReview));
 
         //동시성 이슈 발생 가능2
-        currentReview.incrementLikeCount();
+        reviewServiceApi.incrementLikeCount(reviewId);
+        Long likeCount = reviewServiceApi.getLikeCount(reviewId);
 
-        return LikeResponse.of(reviewId, currentReview.getLikeCount(), true);
+        return LikeResponse.of(reviewId, likeCount, true);
     }
 
     @Transactional
@@ -57,9 +58,10 @@ public class LikeService implements LikeServiceApi {
         likeRepository.delete(foundLike);
 
         //동시성 이슈 발생 가능 3
-        currentReview.decrementLikeCount();
+        reviewServiceApi.decrementLikeCount(reviewId);
 
-        return LikeResponse.of(reviewId, currentReview.getLikeCount(), false);
+        Long likeCount = reviewServiceApi.getLikeCount(reviewId);
+        return LikeResponse.of(reviewId, likeCount, false);
     }
 
     public PageResponse<LikedReviewResponse> getLikedReviews(Long memberId, int page, int size) {

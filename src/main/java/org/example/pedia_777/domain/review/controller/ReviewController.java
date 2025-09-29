@@ -44,7 +44,7 @@ public class ReviewController {
     @GetMapping("/reviews")
     public ResponseEntity<GlobalApiResponse<PageResponse<ReviewResponse>>> getReviewList(
             @RequestParam Long movieId,
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "LIKES") ReviewSort sort
     ) {

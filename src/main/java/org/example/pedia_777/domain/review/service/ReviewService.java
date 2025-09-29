@@ -91,4 +91,22 @@ public class ReviewService implements ReviewServiceApi {
         return reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new BusinessException(ReviewErrorCode.REVIEW_NOT_FOUND));
     }
+
+
+    @Override
+    @Transactional
+    public void incrementLikeCount(Long reviewId) {
+        reviewRepository.incrementLikeCount(reviewId);
+    }
+
+    @Override
+    @Transactional
+    public void decrementLikeCount(Long reviewId) {
+        reviewRepository.decrementLikeCount(reviewId);
+    }
+
+    @Override
+    public Long getLikeCount(Long reviewId) {
+        return reviewRepository.getLikeCount(reviewId);
+    }
 }
