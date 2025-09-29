@@ -25,7 +25,7 @@ public class SearchService {
     }
 
     @Cacheable(
-            cacheNames = CacheType.MOVIE_SEARCH_NAME, cacheManager = "caffeineCacheManager",
+            cacheNames = CacheType.MOVIE_SEARCH_NAME, cacheManager = "redisCacheManager",
             key = "'search:' + #keyword.trim().toLowerCase() + ':' + #pageable.pageNumber + ':' + #pageable.pageSize",
             condition = "#keyword != null && #keyword.trim().length() <= 30 && #pageable.pageSize <= 30 && #pageable.pageNumber <= 3",
             unless = "#result == null || #result.content.isEmpty()")
