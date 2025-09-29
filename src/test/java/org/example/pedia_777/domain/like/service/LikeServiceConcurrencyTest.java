@@ -78,7 +78,7 @@ class LikeServiceConcurrencyTest {
 
     @Test
     @DisplayName("서로 다른 유저 여러명이 동시에 같은 리뷰에 좋아요를 누르고 likeCount가 정확해야 한다")
-    void concurrentAddLike_withPessimisticLock() throws Exception {
+    void concurrentAddLike() throws Exception {
 
         // given
         int threads = likeId.size();
@@ -118,6 +118,56 @@ class LikeServiceConcurrencyTest {
             Long mid = likeId.get(i);
             boolean exists = likeRepository.existsByMemberIdAndReviewId(mid, reviewId);
             assertThat(exists).isTrue();
+        }
+    }
+
+    @Test
+    @DisplayName("서로 다른 유저 여러명이 동시에 같은 리뷰에 좋아요를 취소했을 때 likeCount가 정확해야 한다")
+    void concurrentCancelLike() throws Exception {
+
+        // given
+        // 미리 100명이 리뷰에 좋아요 누름
+        for (Long memberId : likeId) {
+            likeService.addLike(memberId, reviewId);
+        }
+
+        int threads = likeId.size();
+
+        ExecutorService pool = Executors.newFixedThreadPool(32);
+        CountDownLatch ready = new CountDownLatch(threads);
+        CountDownLatch start = new CountDownLatch(1);
+        CountDownLatch done = new CountDownLatch(threads);
+
+        List<Future<?>> futures = new ArrayList<>(threads);
+
+        // when
+        for (Long memberId : likeId) {
+            futures.add(pool.submit(() -> {
+                ready.countDown();
+                start.await();
+                likeService.cancelLike(memberId, reviewId);
+                done.countDown();
+                return null;
+            }));
+        }
+
+        ready.await(5, TimeUnit.SECONDS);
+        start.countDown();
+        done.await(30, TimeUnit.SECONDS);
+
+        // then
+        for (Future<?> f : futures) {
+            f.get(0, TimeUnit.SECONDS);
+        }
+        pool.shutdown();
+
+        Review review = reviewRepository.findById(reviewId).orElseThrow();
+        assertThat(review.getLikeCount()).isZero();
+
+        for (int i = 0; i < Math.min(10, likeId.size()); i++) {
+            Long mid = likeId.get(i);
+            boolean exists = likeRepository.existsByMemberIdAndReviewId(mid, reviewId);
+            assertThat(exists).isFalse();
         }
     }
 }
