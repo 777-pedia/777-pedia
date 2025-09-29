@@ -1,6 +1,7 @@
 #!/bin/sh
 # redis/init/init-redis.sh
 
+# 시작
 echo "Waiting for Redis to start..."
 sleep 10
 
