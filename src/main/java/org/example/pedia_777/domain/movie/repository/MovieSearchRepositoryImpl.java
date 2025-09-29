@@ -1,6 +1,7 @@
 package org.example.pedia_777.domain.movie.repository;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -25,6 +26,7 @@ public class MovieSearchRepositoryImpl implements MovieSearchRepository {
         QReview review = QReview.review;
         QFavorite favorite = QFavorite.favorite;
 
+        // 영화 검색
         List<MovieSearchProjection> content = queryFactory.select(
                         Projections.constructor(MovieSearchProjection.class,
                                 movie.id,
@@ -32,17 +34,27 @@ public class MovieSearchRepositoryImpl implements MovieSearchRepository {
                                 movie.director,
                                 movie.actors,
                                 movie.posterUrl,
-                                review.star.avg(),
-                                review.id.countDistinct(),
-                                favorite.id.countDistinct()
+
+                                // avgRating 서브 쿼리
+                                JPAExpressions.select(review.star.avg())
+                                        .from(review)
+                                        .where(review.movie.id.eq(movie.id)),
+
+                                // reviewCount 서브 쿼리
+                                JPAExpressions.select(review.count())
+                                        .from(review)
+                                        .where(review.movie.id.eq(movie.id)),
+
+                                // favoriteCount 서브 쿼리
+                                JPAExpressions.select(favorite.count())
+                                        .from(favorite)
+                                        .where(favorite.movie.id.eq(movie.id))
                         ))
                 .from(movie)
-                .leftJoin(review).on(review.movie.id.eq(movie.id))
-                .leftJoin(favorite).on(favorite.movie.id.eq(movie.id))
                 .where(movie.title.containsIgnoreCase(keyword)
                         .or(movie.director.containsIgnoreCase(keyword))
                         .or(movie.actors.containsIgnoreCase(keyword)))
-                .groupBy(movie.id)
+                .orderBy(movie.releaseDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
