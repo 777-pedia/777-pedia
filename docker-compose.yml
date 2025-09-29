@@ -29,8 +29,15 @@ services:
       - redis-data:/data
     #      - ./config/redis.conf:/usr/local/etc/redis/redis.conf #로컬의 개인 설정 파일을 컨테이너 내부로 연결
     command: redis-server --appendonly yes
-#    command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes # 연결된 설정 파일을 사용하여 Redis 서버 실행
+  #    command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes # 연결된 설정 파일을 사용하여 Redis 서버 실행
 
+  redis-seeder:
+    build: ./redis/init
+    depends_on:
+      - redis-db
+    environment:
+      - TZ=Asia/Seoul
+      
 volumes:
   mysql-data:
   redis-data:

@@ -16,14 +16,16 @@ import org.springframework.stereotype.Service;
 public class SearchService {
 
     private final MovieService movieService;
+    private final PopularSearchService popularSearchService;
 
     public PageResponse<MovieSearchResponse> searchMovies(String keyword, Pageable pageable) {
 
+        popularSearchService.incrementSearchKeyword(keyword);
         return PageResponse.from(movieService.searchMovies(keyword, pageable));
     }
 
     @Cacheable(
-            cacheNames = CacheType.MOVIE_SEARCH_NAME,
+            cacheNames = CacheType.MOVIE_SEARCH_NAME, cacheManager = "caffeineCacheManager",
             key = "'search:' + #keyword.trim().toLowerCase() + ':' + #pageable.pageNumber + ':' + #pageable.pageSize",
             condition = "#keyword != null && #keyword.trim().length() <= 30 && #pageable.pageSize <= 30 && #pageable.pageNumber <= 3",
             unless = "#result == null || #result.content.isEmpty()")
@@ -32,6 +34,7 @@ public class SearchService {
         log.info("[SearchService] searchMoviesWithLocalCache DB 연결 | keyword: {}, pageSize: {}, pageNumber: {}",
                 keyword,
                 pageable.getPageSize(), pageable.getPageNumber());
+        popularSearchService.incrementSearchKeyword(keyword);
         return PageResponse.from(movieService.searchMovies(keyword, pageable));
     }
 
