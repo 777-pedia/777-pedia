@@ -31,17 +31,16 @@ public class LikeService implements LikeServiceApi {
     @Transactional
     public LikeResponse addLike(Long memberId, Long reviewId) {
 
-        //동시성 이슈 발생 가능1
+        Review currentReview = reviewServiceApi.findReviewByIdForUpdate(reviewId);
+
         if (likeRepository.existsByMemberIdAndReviewId(memberId, reviewId)) {
             throw new BusinessException(LikeErrorCode.LIKE_ALREADY_EXISTS);
         }
 
         Member currentMember = memberServiceApi.findMemberById(memberId);
-        Review currentReview = reviewServiceApi.findReviewById(reviewId);
 
         likeRepository.save(Like.of(currentMember, currentReview));
 
-        //동시성 이슈 발생 가능2
         currentReview.incrementLikeCount();
 
         return LikeResponse.of(reviewId, currentReview.getLikeCount(), true);
@@ -50,13 +49,13 @@ public class LikeService implements LikeServiceApi {
     @Transactional
     public LikeResponse cancelLike(Long memberId, Long reviewId) {
 
+        Review currentReview = reviewServiceApi.findReviewByIdForUpdate(reviewId);
+
         Like foundLike = likeRepository.findByMemberIdAndReviewId(memberId, reviewId)
                 .orElseThrow(() -> new BusinessException(LikeErrorCode.LIKE_NOT_FOUND));
 
-        Review currentReview = reviewServiceApi.findReviewById(reviewId);
         likeRepository.delete(foundLike);
 
-        //동시성 이슈 발생 가능 3
         currentReview.decrementLikeCount();
 
         return LikeResponse.of(reviewId, currentReview.getLikeCount(), false);

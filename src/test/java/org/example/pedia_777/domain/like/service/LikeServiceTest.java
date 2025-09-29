@@ -78,7 +78,7 @@ public class LikeServiceTest {
     void addLike_Success() {
         //Given
         given(likeRepository.existsByMemberIdAndReviewId(memberId, reviewId)).willReturn(false);
-        given(reviewServiceApi.findReviewById(reviewId)).willReturn(mockReview);
+        given(reviewServiceApi.findReviewByIdForUpdate(reviewId)).willReturn(mockReview);
         given(memberServiceApi.findMemberById(memberId)).willReturn(mockMember);
 
         //When
@@ -95,6 +95,7 @@ public class LikeServiceTest {
     @DisplayName("이미 좋아요를 누른 리뷰에 다시 좋아요를 시도할 경우 예외 발생 테스트")
     void addLike_AlreadyExists_ThrowsException() {
         // Given
+        given(reviewServiceApi.findReviewByIdForUpdate(reviewId)).willReturn(mockReview);
         given(likeRepository.existsByMemberIdAndReviewId(memberId, reviewId)).willReturn(true);
         // When & Then
         assertThatThrownBy(() -> likeService.addLike(memberId, reviewId))
@@ -109,7 +110,7 @@ public class LikeServiceTest {
         Like mockLike = Like.of(mockMember, mockReview);
 
         given(likeRepository.findByMemberIdAndReviewId(memberId, reviewId)).willReturn(Optional.of(mockLike));
-        given(reviewServiceApi.findReviewById(reviewId)).willReturn(mockReview);
+        given(reviewServiceApi.findReviewByIdForUpdate(reviewId)).willReturn(mockReview);
 
         // When
         likeService.cancelLike(memberId, reviewId);
@@ -123,6 +124,7 @@ public class LikeServiceTest {
     @DisplayName("존재하지 않는 좋아요 취소시 예외 발생 테스트")
     void cancelLike_NotFound_ThrowsException() {
         //Given
+        given(reviewServiceApi.findReviewByIdForUpdate(reviewId)).willReturn(mockReview);
         given(likeRepository.findByMemberIdAndReviewId(memberId, reviewId)).willReturn(Optional.empty());
 
         // When & Then
