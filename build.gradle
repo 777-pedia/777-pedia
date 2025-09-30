@@ -61,7 +61,6 @@ dependencies {
     implementation 'com.github.ben-manes.caffeine:caffeine:3.2.2'
 
     //redis lock
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.redisson:redisson-spring-boot-starter:3.35.0'
 }
 
