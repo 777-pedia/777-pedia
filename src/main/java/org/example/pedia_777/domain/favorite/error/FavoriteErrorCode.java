@@ -1,4 +1,4 @@
-package org.example.pedia_777.domain.favorite.code;
+package org.example.pedia_777.domain.favorite.error;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
