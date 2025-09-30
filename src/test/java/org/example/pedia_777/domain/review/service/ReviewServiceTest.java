@@ -17,11 +17,11 @@ import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.service.MemberServiceApi;
 import org.example.pedia_777.domain.movie.entity.Movie;
 import org.example.pedia_777.domain.movie.service.MovieServiceApi;
-import org.example.pedia_777.domain.review.code.ReviewErrorCode;
 import org.example.pedia_777.domain.review.dto.request.ReviewCreateRequest;
 import org.example.pedia_777.domain.review.dto.request.ReviewUpdateRequest;
 import org.example.pedia_777.domain.review.dto.response.ReviewResponse;
 import org.example.pedia_777.domain.review.entity.Review;
+import org.example.pedia_777.domain.review.error.ReviewErrorCode;
 import org.example.pedia_777.domain.review.repository.ReviewRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -158,12 +158,12 @@ class ReviewServiceTest {
 
     @Test
     @DisplayName("리뷰 조회 성공")
-    void findReviewById_success() {
+    void getReviewById_success() {
         // given
         given(reviewRepository.findById(1L)).willReturn(Optional.of(review));
 
         // when
-        Review found = reviewService.findReviewById(1L);
+        Review found = reviewService.getReviewById(1L);
 
         // then
         assertNotNull(found);
@@ -173,13 +173,13 @@ class ReviewServiceTest {
 
     @Test
     @DisplayName("리뷰 조회 실패 시 예외 발생")
-    void findReviewById_notFound() {
+    void getReviewById_notFound() {
         // given
         given(reviewRepository.findById(99L)).willReturn(Optional.empty());
 
         // when & then
         BusinessException exception = assertThrows(BusinessException.class,
-                () -> reviewService.findReviewById(99L));
+                () -> reviewService.getReviewById(99L));
 
         // then
         assertEquals(ReviewErrorCode.REVIEW_NOT_FOUND, exception.getErrorCode());

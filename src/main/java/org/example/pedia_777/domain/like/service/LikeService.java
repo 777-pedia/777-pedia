@@ -37,7 +37,7 @@ public class LikeService implements LikeServiceApi {
         }
 
         Member currentMember = memberServiceApi.findMemberById(memberId);
-        Review currentReview = reviewServiceApi.findReviewById(reviewId);
+        Review currentReview = reviewServiceApi.getReviewById(reviewId);
 
         likeRepository.save(Like.of(currentMember, currentReview));
 
@@ -53,7 +53,7 @@ public class LikeService implements LikeServiceApi {
         Like foundLike = likeRepository.findByMemberIdAndReviewId(memberId, reviewId)
                 .orElseThrow(() -> new BusinessException(LikeErrorCode.LIKE_NOT_FOUND));
 
-        Review currentReview = reviewServiceApi.findReviewById(reviewId);
+        Review currentReview = reviewServiceApi.getReviewById(reviewId);
         likeRepository.delete(foundLike);
 
         //동시성 이슈 발생 가능 3
