@@ -30,7 +30,7 @@ public class FavoriteService {
     public FavoriteAddResponse addFavorite(Long memberId, Long movieId) {
 
         Member member = memberServiceApi.findMemberById(memberId);
-        Movie movie = movieServiceApi.findMovieById((movieId));
+        Movie movie = movieServiceApi.getMovieEntity((movieId));
 
         if (favoriteRepository.findByMemberIdAndMovieId(memberId, movieId).isPresent()) {
             throw new BusinessException(FavoriteErrorCode.FAVORITE_ALREADY_EXISTS);

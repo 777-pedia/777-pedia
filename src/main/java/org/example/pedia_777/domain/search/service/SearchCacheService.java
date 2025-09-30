@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.pedia_777.common.config.CacheType;
 import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.domain.movie.service.MovieService;
-import org.example.pedia_777.domain.search.dto.response.MovieSearchResponse;
+import org.example.pedia_777.domain.search.dto.response.SearchMovieResponse;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class SearchCacheService {
     @Cacheable(cacheNames = CacheType.NAME_MOVIE_SEARCH_PREV_POPULAR, cacheManager = "redisCacheManager",
             key = "'previous:' + #keyword.trim().toLowerCase() + ':' + #pageable.pageNumber + ':' + #pageable.pageSize",
             sync = true)
-    public PageResponse<MovieSearchResponse> searchMoviesForPreviousPopularKeywords(String keyword, Pageable pageable) {
+    public PageResponse<SearchMovieResponse> searchMoviesForPreviousPopularKeywords(String keyword, Pageable pageable) {
 
         return PageResponse.from(movieService.searchMovies(keyword, pageable));
     }
@@ -32,7 +32,7 @@ public class SearchCacheService {
     @Cacheable(cacheNames = CacheType.NAME_MOVIE_SEARCH_CURRENT_POPULAR, cacheManager = "redisCacheManager",
             key = "'current:' + #keyword.trim().toLowerCase() + ':' + #pageable.pageNumber + ':' + #pageable.pageSize",
             sync = true)
-    public PageResponse<MovieSearchResponse> searchMoviesForCurrentPopularKeywords(String keyword, Pageable pageable) {
+    public PageResponse<SearchMovieResponse> searchMoviesForCurrentPopularKeywords(String keyword, Pageable pageable) {
 
         return PageResponse.from(movieService.searchMovies(keyword, pageable));
     }

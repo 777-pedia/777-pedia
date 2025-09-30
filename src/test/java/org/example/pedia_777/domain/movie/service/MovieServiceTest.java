@@ -7,7 +7,7 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Optional;
 import org.example.pedia_777.common.exception.BusinessException;
-import org.example.pedia_777.domain.movie.code.MovieErrorCode;
+import org.example.pedia_777.domain.movie.error.MovieErrorCode;
 import org.example.pedia_777.domain.movie.repository.MovieRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +33,7 @@ class MovieServiceTest {
 
         // when
         BusinessException exception = assertThrows(BusinessException.class, () -> {
-            movieService.findMovieById(nonExistentMovieId);
+            movieService.getMovieEntity(nonExistentMovieId);
         });
 
         // then

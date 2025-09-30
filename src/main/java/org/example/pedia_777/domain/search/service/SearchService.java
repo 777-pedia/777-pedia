@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.domain.movie.service.MovieService;
-import org.example.pedia_777.domain.search.dto.response.MovieSearchResponse;
+import org.example.pedia_777.domain.search.dto.response.SearchMovieResponse;
 import org.example.pedia_777.domain.search.entity.PopularType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,17 +15,17 @@ import org.springframework.stereotype.Service;
 public class SearchService {
 
     private final MovieService movieService;
-    private final PopularSearchService popularSearchService;
+    private final PopularKeywordService popularKeywordService;
     private final SearchCacheService searchCacheService;
 
-    public PageResponse<MovieSearchResponse> searchMovies(String keyword, Pageable pageable) {
+    public PageResponse<SearchMovieResponse> searchMovies(String keyword, Pageable pageable) {
 
         return PageResponse.from(movieService.searchMovies(keyword, pageable));
     }
 
-    public PageResponse<MovieSearchResponse> searchMoviesWithCache(String keyword, Pageable pageable) {
+    public PageResponse<SearchMovieResponse> searchMoviesWithCache(String keyword, Pageable pageable) {
 
-        PopularType popularType = popularSearchService.checkPopularity(keyword);
+        PopularType popularType = popularKeywordService.checkPopularity(keyword);
 
         log.debug("[SearchService] PopularType: {}, 검색 실행 keyword: {}", popularType, keyword);
 
@@ -39,7 +39,7 @@ public class SearchService {
         }
     }
 
-    private PageResponse<MovieSearchResponse> searchMoviesDirectly(String keyword, Pageable pageable) {
+    private PageResponse<SearchMovieResponse> searchMoviesDirectly(String keyword, Pageable pageable) {
 
         return PageResponse.from(movieService.searchMovies(keyword, pageable));
     }

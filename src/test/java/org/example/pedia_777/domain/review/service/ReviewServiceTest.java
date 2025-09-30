@@ -72,7 +72,7 @@ class ReviewServiceTest {
         ReviewCreateRequest request = new ReviewCreateRequest("재밌는 영화", 4.5, 1L);
 
         given(memberServiceApi.findMemberById(authMember.id())).willReturn(member);
-        given(movieServiceApi.findMovieById(request.movieId())).willReturn(movie);
+        given(movieServiceApi.getMovieEntity(request.movieId())).willReturn(movie);
         given(reviewRepository.save(any(Review.class))).willReturn(review);
 
         // when

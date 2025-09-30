@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class PopularSearchService {
+public class PopularKeywordService {
 
     private static final String KEY_PREFIX = "popularKeywords:";  // Sorted Set의 Key
     private final RedisTemplate<String, String> redisTemplate;

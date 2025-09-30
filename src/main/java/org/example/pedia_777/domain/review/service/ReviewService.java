@@ -34,7 +34,7 @@ public class ReviewService implements ReviewServiceApi {
     @Transactional
     public ReviewResponse createReview(AuthMember authMember, ReviewCreateRequest request) {
         Member member = memberServiceApi.findMemberById(authMember.id());
-        Movie movie = movieServiceApi.findMovieById(request.movieId());
+        Movie movie = movieServiceApi.getMovieEntity(request.movieId());
 
         Review review = Review.create(
                 request.comment(),
@@ -50,7 +50,7 @@ public class ReviewService implements ReviewServiceApi {
 
     @Transactional(readOnly = true)
     public PageResponse<ReviewResponse> getReviews(Long movieId, int page, int size, ReviewSort sort) {
-        movieServiceApi.findMovieById(movieId);
+        movieServiceApi.getMovieEntity(movieId);
 
         Sort sortOrder;
         if (sort == null || sort == ReviewSort.LIKES) {
