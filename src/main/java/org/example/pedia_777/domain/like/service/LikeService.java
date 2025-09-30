@@ -49,6 +49,7 @@ public class LikeService implements LikeServiceApi {
     }
 
     @Transactional
+    @DistributedLock(key = "#reviewId")
     public LikeResponse cancelLike(Long memberId, Long reviewId) {
 
         Like foundLike = likeRepository.findByMemberIdAndReviewId(memberId, reviewId)
