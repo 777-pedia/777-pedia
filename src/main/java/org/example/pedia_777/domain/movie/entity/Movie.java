@@ -10,6 +10,7 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,9 +43,9 @@ public class Movie extends BaseTimeEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updatedAt;
 
-    @Builder
-    public Movie(String director, String title, String actors, String genres, LocalDate releaseDate, Integer runtime,
-                 String country, String overview, String posterUrl) {
+    @Builder(access = AccessLevel.PRIVATE)
+    private Movie(String director, String title, String actors, String genres, LocalDate releaseDate, Integer runtime,
+                  String country, String overview, String posterUrl) {
         this.director = director;
         this.title = title;
         this.actors = actors;
