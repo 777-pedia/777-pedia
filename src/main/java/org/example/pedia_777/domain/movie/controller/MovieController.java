@@ -30,7 +30,7 @@ public class MovieController {
     }
 
     @GetMapping("/ranking")
-    public ResponseEntity<Response<List<MovieRankResponse>>> getTopTenMovies(
+    public Response<List<MovieRankResponse>> getTopTenMovies(
             @RequestParam(defaultValue = "daily") String period) {
 
         List<MovieRankResponse> movieRankResponseList =
@@ -38,6 +38,6 @@ public class MovieController {
                         ? movieRankingService.getDailyTop10()
                         : movieRankingService.getWeeklyTop10();
 
-        return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS, movieRankResponseList);
+        return Response.of(SuccessMessage.REQUEST_SUCCESS, movieRankResponseList);
     }
 }
