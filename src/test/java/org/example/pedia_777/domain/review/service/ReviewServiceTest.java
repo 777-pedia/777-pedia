@@ -71,7 +71,7 @@ class ReviewServiceTest {
         AuthMember authMember = new AuthMember(1L, member.getEmail(), member.getNickname());
         ReviewCreateRequest request = new ReviewCreateRequest("재밌는 영화", 4.5, 1L);
 
-        given(memberServiceApi.findMemberById(authMember.id())).willReturn(member);
+        given(memberServiceApi.getMemberById(authMember.id())).willReturn(member);
         given(movieServiceApi.getMovieEntity(request.movieId())).willReturn(movie);
         given(reviewRepository.save(any(Review.class))).willReturn(review);
 

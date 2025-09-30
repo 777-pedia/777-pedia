@@ -90,7 +90,7 @@ class FavoriteServiceTest {
     void addFavoriteSuccess() {
 
         // given
-        given(memberServiceApi.findMemberById(memberId)).willReturn(testMember);
+        given(memberServiceApi.getMemberById(memberId)).willReturn(testMember);
         given(movieServiceApi.getMovieEntity(movieId)).willReturn(testMovie);
         given(favoriteRepository.findByMemberIdAndMovieId(memberId, movieId)).willReturn(Optional.empty());
 
@@ -110,7 +110,7 @@ class FavoriteServiceTest {
     void addFavoriteFail_AlreadyExists() {
 
         // given
-        given(memberServiceApi.findMemberById(memberId)).willReturn(testMember);
+        given(memberServiceApi.getMemberById(memberId)).willReturn(testMember);
         given(movieServiceApi.getMovieEntity(movieId)).willReturn(testMovie);
         given(favoriteRepository.findByMemberIdAndMovieId(memberId, movieId)).willReturn(
                 Optional.of(Favorite.create(testMember, testMovie)));

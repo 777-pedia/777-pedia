@@ -79,7 +79,7 @@ public class LikeServiceTest {
         //Given
         given(likeRepository.existsByMemberIdAndReviewId(memberId, reviewId)).willReturn(false);
         given(reviewServiceApi.getReviewById(reviewId)).willReturn(mockReview);
-        given(memberServiceApi.findMemberById(memberId)).willReturn(mockMember);
+        given(memberServiceApi.getMemberById(memberId)).willReturn(mockMember);
 
         //When
         LikeResponse response = likeService.addLike(memberId, reviewId);

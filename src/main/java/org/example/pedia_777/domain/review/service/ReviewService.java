@@ -33,7 +33,7 @@ public class ReviewService implements ReviewServiceApi {
 
     @Transactional
     public ReviewResponse createReview(AuthMember authMember, ReviewCreateRequest request) {
-        Member member = memberServiceApi.findMemberById(authMember.id());
+        Member member = memberServiceApi.getMemberById(authMember.id());
         Movie movie = movieServiceApi.getMovieEntity(request.movieId());
 
         Review review = Review.create(

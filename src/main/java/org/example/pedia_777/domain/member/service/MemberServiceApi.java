@@ -4,9 +4,9 @@ import org.example.pedia_777.domain.member.entity.Member;
 
 public interface MemberServiceApi {
 
-    Member findMemberById(Long memberId);
+    Member getMemberById(Long memberId);
 
     void existsByEmail(String email);
 
-    Member findMemberByEmail(String email);
+    Member getMemberByEmail(String email);
 }
