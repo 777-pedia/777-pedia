@@ -29,7 +29,7 @@ public class Favorite extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Movie movie;
 
-    @Builder
+    @Builder(access = AccessLevel.PRIVATE)
     private Favorite(Member member, Movie movie) {
         this.member = member;
         this.movie = movie;

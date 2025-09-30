@@ -60,9 +60,9 @@ public class Review extends BaseTimeEntity {
     @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
 
-    @Builder
-    public Review(String comment, double star, Long likeCount,
-                  LocalDateTime updatedAt, LocalDateTime deletedAt, Movie movie, Member member) {
+    @Builder(access = AccessLevel.PRIVATE)
+    private Review(String comment, double star, Long likeCount,
+                   LocalDateTime updatedAt, LocalDateTime deletedAt, Movie movie, Member member) {
         this.comment = comment;
         this.star = star;
         this.likeCount = likeCount;
