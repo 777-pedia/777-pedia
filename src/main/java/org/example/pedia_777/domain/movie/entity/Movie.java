@@ -20,9 +20,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Entity
-@Table(indexes = {
-        @Index(name = "idx_movie_release_date", columnList = "releaseDate")
-})
 public class Movie extends BaseTimeEntity {
 
     @Id
