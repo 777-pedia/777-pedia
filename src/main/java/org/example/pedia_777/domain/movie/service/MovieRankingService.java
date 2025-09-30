@@ -100,4 +100,20 @@ public class MovieRankingService {
                 .collect(Collectors.toList());
 
     }
+
+    // 어제 Top 10에 포함되는지 여부
+    public boolean isDailyTop10(Long movieId) {
+
+        String yesterdaysKey = getDailyKey(LocalDate.now().minusDays(1));
+        Long rank = redisTemplate.opsForZSet().reverseRank(yesterdaysKey, String.valueOf(movieId));
+        return rank != null && rank < 10;
+    }
+
+    // 지난주 Top 10에 포함되는지 여부
+    public boolean isWeeklyTop10(Long movieId) {
+
+        String lastWeeksKey = getWeeklyKey(LocalDate.now().minusWeeks(1));
+        Long rank = redisTemplate.opsForZSet().reverseRank(lastWeeksKey, String.valueOf(movieId));
+        return rank != null && rank < 10;
+    }
 }
