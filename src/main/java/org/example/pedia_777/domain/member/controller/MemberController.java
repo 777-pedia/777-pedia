@@ -9,9 +9,11 @@ import org.example.pedia_777.domain.member.dto.request.MemberRequest;
 import org.example.pedia_777.domain.member.dto.response.MemberLoginResponse;
 import org.example.pedia_777.domain.member.dto.response.MemberResponse;
 import org.example.pedia_777.domain.member.service.MemberService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,6 +23,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/signup")
     public Response<MemberResponse> signup(@Valid @RequestBody MemberRequest memberRequest) {
         MemberResponse signup = memberService.signup(memberRequest);

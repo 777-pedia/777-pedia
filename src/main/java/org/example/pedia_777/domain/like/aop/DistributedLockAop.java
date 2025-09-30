@@ -41,10 +41,7 @@ public class DistributedLockAop {
                 return;
             }
             aopForTransaction.proceed(joinPoint);
-//            LikeResponse proceed = (LikeResponse) joinPoint.proceed();
-//            System.out.println(
-//                    "Thread.currentThread().getName() = " + Thread.currentThread().getName() + " , available = "
-//                            + available + ", proceed = " + proceed);
+
         } catch (Exception e) {
             throw new IllegalArgumentException("예외가 발생하였습니다.");
 
