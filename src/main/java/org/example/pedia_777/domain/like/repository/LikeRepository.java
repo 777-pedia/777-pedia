@@ -15,4 +15,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
 
     @EntityGraph(attributePaths = {"review", "review.movie"})
     Page<Like> findByMemberId(Long memberId, Pageable pageable);
+
+    long countByReviewId(Long id);
 }
