@@ -1,31 +1,31 @@
 package org.example.pedia_777.common.util;
 
 import org.example.pedia_777.common.code.Code;
-import org.example.pedia_777.common.dto.GlobalApiResponse;
+import org.example.pedia_777.common.dto.Response;
 import org.springframework.http.ResponseEntity;
 
 public class ResponseHelper {
-    public static <T> ResponseEntity<GlobalApiResponse<T>> success(Code code, T data) {
+    public static <T> ResponseEntity<Response<T>> success(Code code, T data) {
         return ResponseEntity
                 .status(code.getHttpStatus())
-                .body(GlobalApiResponse.success(code, data));
+                .body(Response.success(code, data));
     }
 
-    public static ResponseEntity<GlobalApiResponse<Void>> success(Code code) {
+    public static ResponseEntity<Response<Void>> success(Code code) {
         return ResponseEntity
                 .status(code.getHttpStatus())
-                .body(GlobalApiResponse.success(code));
+                .body(Response.success(code));
     }
 
-    public static ResponseEntity<GlobalApiResponse<Void>> error(Code code) {
+    public static ResponseEntity<Response<Void>> error(Code code) {
         return ResponseEntity
                 .status(code.getHttpStatus())
-                .body(GlobalApiResponse.error(code));
+                .body(Response.error(code));
     }
 
-    public static ResponseEntity<GlobalApiResponse<Void>> error(Code code, String customMessage) {
+    public static ResponseEntity<Response<Void>> error(Code code, String customMessage) {
         return ResponseEntity
                 .status(code.getHttpStatus())
-                .body(GlobalApiResponse.error(code, customMessage));
+                .body(Response.error(code, customMessage));
     }
 }

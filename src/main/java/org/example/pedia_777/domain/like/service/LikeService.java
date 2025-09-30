@@ -3,6 +3,7 @@ package org.example.pedia_777.domain.like.service;
 import lombok.RequiredArgsConstructor;
 import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.exception.BusinessException;
+import org.example.pedia_777.domain.like.aop.DistributedLock;
 import org.example.pedia_777.domain.like.dto.response.LikeResponse;
 import org.example.pedia_777.domain.like.dto.response.LikedReviewResponse;
 import org.example.pedia_777.domain.like.entity.Like;
@@ -29,8 +30,8 @@ public class LikeService implements LikeServiceApi {
     private final MemberServiceApi memberServiceApi;
 
     @Transactional
+    @DistributedLock(key = "#reviewId")
     public LikeResponse addLike(Long memberId, Long reviewId) {
-
         //동시성 이슈 발생 가능1
         if (likeRepository.existsByMemberIdAndReviewId(memberId, reviewId)) {
             throw new BusinessException(LikeErrorCode.LIKE_ALREADY_EXISTS);
