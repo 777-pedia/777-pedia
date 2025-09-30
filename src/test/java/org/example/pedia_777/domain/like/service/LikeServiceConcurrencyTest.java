@@ -6,10 +6,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.example.pedia_777.domain.favorite.repository.FavoriteRepository;
+import org.example.pedia_777.domain.like.entity.Like;
 import org.example.pedia_777.domain.like.repository.LikeRepository;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.repository.MemberRepository;
@@ -90,7 +90,7 @@ class LikeServiceConcurrencyTest {
 
     @Test
     @DisplayName("100명의 사용자가 동시에 리뷰에 좋아요를 눌렀을 때 likeCount가 정확히 100이 되어야 한다")
-    void addLikeConcurrencyTest() throws InterruptedException, ExecutionException {
+    void addLikeConcurrencyTest() throws InterruptedException {
         int totalThreads = 100;
         ExecutorService executor = Executors.newFixedThreadPool(20);
         CountDownLatch latch = new CountDownLatch(totalThreads);
@@ -112,5 +112,43 @@ class LikeServiceConcurrencyTest {
         Review result = reviewRepository.findById(testReview.getId()).orElseThrow();
         System.out.println("최종 좋아요 수: " + result.getLikeCount());
         assertEquals(100, result.getLikeCount());
+    }
+
+    @Test
+    @DisplayName("100명의 사용자가 동시에 리뷰에 좋아요를 취소했을 때 likeCount가 정확히 0이 되어야 한다")
+    void cancelLikeConcurrencyTest() throws InterruptedException {
+
+        // given
+        for (Member member : likeMembers) {
+            likeRepository.save(Like.of(member, testReview));
+        }
+        for (int i = 0; i < 100; i++) {
+            testReview.incrementLikeCount();
+        }
+        reviewRepository.save(testReview);
+
+        // when
+        int totalThreads = 100;
+        ExecutorService executor = Executors.newFixedThreadPool(20);
+        CountDownLatch latch = new CountDownLatch(totalThreads);
+
+        for (int i = 0; i < totalThreads; i++) {
+            final int index = i;
+            executor.submit(() -> {
+                try {
+                    likeService.cancelLike(likeMembers.get(index).getId(), testReview.getId());
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+        executor.shutdown();
+
+        // then
+        Review result = reviewRepository.findById(testReview.getId()).orElseThrow();
+        System.out.println("최종 좋아요 수: " + result.getLikeCount());
+        assertEquals(0, result.getLikeCount());
     }
 }
