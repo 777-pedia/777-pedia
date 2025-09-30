@@ -1,4 +1,4 @@
-package org.example.pedia_777.domain.review.code;
+package org.example.pedia_777.domain.movie.error;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -7,10 +7,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum ReviewSuccessCode implements Code {
+public enum MovieErrorCode implements Code {
 
-    REVIEW_LIST_VIEWED(HttpStatus.OK, "리뷰를 찾았습니다.");
-
+    MOVIE_NOT_FOUND(HttpStatus.NOT_FOUND, "영화를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String messageTemplate;

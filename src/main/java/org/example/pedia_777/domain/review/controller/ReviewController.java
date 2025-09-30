@@ -7,7 +7,6 @@ import org.example.pedia_777.common.dto.AuthMember;
 import org.example.pedia_777.common.dto.GlobalApiResponse;
 import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.util.ResponseHelper;
-import org.example.pedia_777.domain.review.code.ReviewSuccessCode;
 import org.example.pedia_777.domain.review.dto.request.ReviewCreateRequest;
 import org.example.pedia_777.domain.review.dto.request.ReviewUpdateRequest;
 import org.example.pedia_777.domain.review.dto.response.ReviewResponse;
@@ -49,7 +48,7 @@ public class ReviewController {
             @RequestParam(defaultValue = "LIKES") ReviewSort sort
     ) {
         PageResponse<ReviewResponse> response = reviewService.getReviews(movieId, page, size, sort);
-        return ResponseHelper.success(ReviewSuccessCode.REVIEW_LIST_VIEWED, response);
+        return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS, response);
     }
 
     @PutMapping("/reviews/{reviewId}")

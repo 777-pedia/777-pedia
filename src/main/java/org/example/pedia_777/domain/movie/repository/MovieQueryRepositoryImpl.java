@@ -9,43 +9,43 @@ import lombok.RequiredArgsConstructor;
 import org.example.pedia_777.domain.favorite.entity.QFavorite;
 import org.example.pedia_777.domain.movie.entity.QMovie;
 import org.example.pedia_777.domain.review.entity.QReview;
-import org.example.pedia_777.domain.search.dto.response.MovieSearchProjection;
+import org.example.pedia_777.domain.search.dto.response.SearchMovieProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 
 @RequiredArgsConstructor
-public class MovieSearchRepositoryImpl implements MovieSearchRepository {
+public class MovieQueryRepositoryImpl implements MovieQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<MovieSearchProjection> searchMovies(String keyword, Pageable pageable) {
+    public Page<SearchMovieProjection> searchMovies(String keyword, Pageable pageable) {
 
         QMovie movie = QMovie.movie;
         QReview review = QReview.review;
         QFavorite favorite = QFavorite.favorite;
 
         // 영화 검색
-        List<MovieSearchProjection> content = queryFactory.select(
-                        Projections.constructor(MovieSearchProjection.class,
+        List<SearchMovieProjection> content = queryFactory.select(
+                        Projections.constructor(SearchMovieProjection.class,
                                 movie.id,
                                 movie.title,
                                 movie.director,
                                 movie.actors,
                                 movie.posterUrl,
 
-                                // avgRating 서브 쿼리
+                                // avgRating 집계 서브 쿼리
                                 JPAExpressions.select(review.star.avg())
                                         .from(review)
                                         .where(review.movie.id.eq(movie.id)),
 
-                                // reviewCount 서브 쿼리
+                                // reviewCount 집계 서브 쿼리
                                 JPAExpressions.select(review.count())
                                         .from(review)
                                         .where(review.movie.id.eq(movie.id)),
 
-                                // favoriteCount 서브 쿼리
+                                // favoriteCount 집계 서브 쿼리
                                 JPAExpressions.select(favorite.count())
                                         .from(favorite)
                                         .where(favorite.movie.id.eq(movie.id))

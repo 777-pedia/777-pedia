@@ -25,7 +25,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 @SpringBootTest
 @ActiveProfiles("test")
-class PopularSearchServiceTest {
+class PopularKeywordServiceTest {
 
     // @Container와 @ServiceConnection으로 사용될 컨테이너 정의
     @Container
@@ -38,7 +38,7 @@ class PopularSearchServiceTest {
             .withExposedPorts(6379);
 
     @Autowired
-    private PopularSearchService popularSearchService;
+    private PopularKeywordService popularKeywordService;
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
@@ -60,14 +60,14 @@ class PopularSearchServiceTest {
         String currentHourKey = getCurrentHourKey();
 
         // when
-        popularSearchService.incrementSearchKeyword(keyword);
-        popularSearchService.incrementSearchKeyword(keyword);
-        popularSearchService.incrementSearchKeyword(keyword);
-        popularSearchService.incrementSearchKeyword(keyword);
-        popularSearchService.incrementSearchKeyword(keyword);
+        popularKeywordService.incrementSearchKeyword(keyword);
+        popularKeywordService.incrementSearchKeyword(keyword);
+        popularKeywordService.incrementSearchKeyword(keyword);
+        popularKeywordService.incrementSearchKeyword(keyword);
+        popularKeywordService.incrementSearchKeyword(keyword);
 
         // 다른 키워드도 한 번 호출
-        popularSearchService.incrementSearchKeyword("Java");
+        popularKeywordService.incrementSearchKeyword("Java");
 
         // then
         // Redis에 저장된 점수 검증
@@ -108,7 +108,7 @@ class PopularSearchServiceTest {
         );
 
         // when
-        List<PopularKeywordResponse> popularKeywords = popularSearchService.getPopularKeywordsOfPreviousHour();
+        List<PopularKeywordResponse> popularKeywords = popularKeywordService.getPopularKeywordsOfPreviousHour();
 
         // then
         assertThat(popularKeywords).hasSize(10);

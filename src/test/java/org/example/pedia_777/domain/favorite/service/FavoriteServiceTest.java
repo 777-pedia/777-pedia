@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.Optional;
 import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.exception.BusinessException;
-import org.example.pedia_777.domain.favorite.code.FavoriteErrorCode;
 import org.example.pedia_777.domain.favorite.dto.response.FavoriteAddResponse;
 import org.example.pedia_777.domain.favorite.dto.response.FavoriteMovieResponse;
 import org.example.pedia_777.domain.favorite.entity.Favorite;
+import org.example.pedia_777.domain.favorite.error.FavoriteErrorCode;
 import org.example.pedia_777.domain.favorite.repository.FavoriteRepository;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.service.MemberServiceApi;
@@ -90,8 +90,8 @@ class FavoriteServiceTest {
     void addFavoriteSuccess() {
 
         // given
-        given(memberServiceApi.findMemberById(memberId)).willReturn(testMember);
-        given(movieServiceApi.findMovieById(movieId)).willReturn(testMovie);
+        given(memberServiceApi.getMemberById(memberId)).willReturn(testMember);
+        given(movieServiceApi.getMovieEntity(movieId)).willReturn(testMovie);
         given(favoriteRepository.findByMemberIdAndMovieId(memberId, movieId)).willReturn(Optional.empty());
 
         // when
@@ -110,8 +110,8 @@ class FavoriteServiceTest {
     void addFavoriteFail_AlreadyExists() {
 
         // given
-        given(memberServiceApi.findMemberById(memberId)).willReturn(testMember);
-        given(movieServiceApi.findMovieById(movieId)).willReturn(testMovie);
+        given(memberServiceApi.getMemberById(memberId)).willReturn(testMember);
+        given(movieServiceApi.getMovieEntity(movieId)).willReturn(testMovie);
         given(favoriteRepository.findByMemberIdAndMovieId(memberId, movieId)).willReturn(
                 Optional.of(Favorite.create(testMember, testMovie)));
 

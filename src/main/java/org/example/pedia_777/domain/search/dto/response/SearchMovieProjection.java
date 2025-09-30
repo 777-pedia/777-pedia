@@ -1,6 +1,6 @@
 package org.example.pedia_777.domain.search.dto.response;
 
-public record MovieSearchProjection(
+public record SearchMovieProjection(
         Long id,
         String title,
         String director,
