@@ -2,17 +2,15 @@ package org.example.pedia_777.domain.review.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.pedia_777.common.code.CommonSuccessCode;
+import org.example.pedia_777.common.code.SuccessMessage;
 import org.example.pedia_777.common.dto.AuthMember;
 import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.dto.Response;
-import org.example.pedia_777.common.util.ResponseHelper;
 import org.example.pedia_777.domain.review.dto.request.ReviewCreateRequest;
 import org.example.pedia_777.domain.review.dto.request.ReviewUpdateRequest;
 import org.example.pedia_777.domain.review.dto.response.ReviewResponse;
 import org.example.pedia_777.domain.review.entity.ReviewSort;
 import org.example.pedia_777.domain.review.service.ReviewService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,41 +30,41 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping("/reviews")
-    public ResponseEntity<Response<ReviewResponse>> createReview(
+    public Response<ReviewResponse> createReview(
             @AuthenticationPrincipal AuthMember authMember,
             @Valid @RequestBody ReviewCreateRequest request) {
 
         ReviewResponse response = reviewService.createReview(authMember, request);
-        return ResponseHelper.success(CommonSuccessCode.CREATED_SUCCESS, response);
+        return Response.of(SuccessMessage.CREATED_SUCCESS, response);
     }
 
     @GetMapping("/reviews")
-    public ResponseEntity<Response<PageResponse<ReviewResponse>>> getReviewList(
+    public Response<PageResponse<ReviewResponse>> getReviewList(
             @RequestParam Long movieId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "LIKES") ReviewSort sort
     ) {
         PageResponse<ReviewResponse> response = reviewService.getReviews(movieId, page, size, sort);
-        return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS, response);
+        return Response.of(SuccessMessage.REQUEST_SUCCESS, response);
     }
 
     @PutMapping("/reviews/{reviewId}")
-    public ResponseEntity<Response<ReviewResponse>> updateReview(
+    public Response<ReviewResponse> updateReview(
             @PathVariable Long reviewId,
             @AuthenticationPrincipal AuthMember authMember,
             @RequestBody ReviewUpdateRequest request) {
 
         ReviewResponse response = reviewService.updateReview(reviewId, authMember, request);
-        return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS, response);
+        return Response.of(SuccessMessage.REQUEST_SUCCESS, response);
     }
 
     @DeleteMapping("/reviews/{reviewId}")
-    public ResponseEntity<Response<Void>> deleteReview(
+    public Response<Void> deleteReview(
             @PathVariable Long reviewId,
             @AuthenticationPrincipal AuthMember authMember) {
 
         reviewService.deleteReview(reviewId, authMember);
-        return ResponseHelper.success(CommonSuccessCode.DELETED_SUCCESS);
+        return Response.of(SuccessMessage.DELETED_SUCCESS, null);
     }
 }
