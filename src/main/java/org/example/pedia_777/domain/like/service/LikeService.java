@@ -32,7 +32,7 @@ public class LikeService implements LikeServiceApi {
     @Transactional
     @DistributedLock(key = "#reviewId")
     public LikeResponse addLike(Long memberId, Long reviewId) {
-        //동시성 이슈 발생 가능1
+
         if (likeRepository.existsByMemberIdAndReviewId(memberId, reviewId)) {
             throw new BusinessException(LikeErrorCode.LIKE_ALREADY_EXISTS);
         }
@@ -42,7 +42,6 @@ public class LikeService implements LikeServiceApi {
 
         likeRepository.save(Like.of(currentMember, currentReview));
 
-        //동시성 이슈 발생 가능2
         currentReview.incrementLikeCount();
 
         return LikeResponse.of(reviewId, currentReview.getLikeCount(), true);
@@ -58,7 +57,6 @@ public class LikeService implements LikeServiceApi {
         Review currentReview = reviewServiceApi.getReviewById(reviewId);
         likeRepository.delete(foundLike);
 
-        //동시성 이슈 발생 가능 3
         currentReview.decrementLikeCount();
 
         return LikeResponse.of(reviewId, currentReview.getLikeCount(), false);
