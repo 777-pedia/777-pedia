@@ -31,7 +31,7 @@ public class LikeService implements LikeServiceApi {
     @Transactional
     public LikeResponse addLike(Long memberId, Long reviewId) {
 
-        Review currentReview = reviewServiceApi.findReviewByIdForUpdate(reviewId);
+        Review currentReview = reviewServiceApi.getReviewByIdForUpdate(reviewId);
 
         if (likeRepository.existsByMemberIdAndReviewId(memberId, reviewId)) {
             throw new BusinessException(LikeErrorCode.LIKE_ALREADY_EXISTS);
@@ -49,7 +49,7 @@ public class LikeService implements LikeServiceApi {
     @Transactional
     public LikeResponse cancelLike(Long memberId, Long reviewId) {
 
-        Review currentReview = reviewServiceApi.findReviewByIdForUpdate(reviewId);
+        Review currentReview = reviewServiceApi.getReviewByIdForUpdate(reviewId);
 
         Like foundLike = likeRepository.findByMemberIdAndReviewId(memberId, reviewId)
                 .orElseThrow(() -> new BusinessException(LikeErrorCode.LIKE_NOT_FOUND));

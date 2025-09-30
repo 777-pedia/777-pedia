@@ -94,7 +94,7 @@ public class ReviewService implements ReviewServiceApi {
 
     @Override
     @Transactional
-    public Review findReviewByIdForUpdate(Long reviewId) {
+    public Review getReviewByIdForUpdate(Long reviewId) {
         return reviewRepository.findByIdForUpdate(reviewId)
                 .orElseThrow(() -> new BusinessException(ReviewErrorCode.REVIEW_NOT_FOUND));
     }

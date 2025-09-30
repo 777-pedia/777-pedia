@@ -78,7 +78,7 @@ public class LikeServiceTest {
     void addLike_Success() {
         //Given
         given(likeRepository.existsByMemberIdAndReviewId(memberId, reviewId)).willReturn(false);
-        given(reviewServiceApi.findReviewByIdForUpdate(reviewId)).willReturn(mockReview);
+        given(reviewServiceApi.getReviewByIdForUpdate(reviewId)).willReturn(mockReview);
         given(memberServiceApi.getMemberById(memberId)).willReturn(mockMember);
 
         //When
@@ -109,7 +109,7 @@ public class LikeServiceTest {
         Like mockLike = Like.of(mockMember, mockReview);
 
         given(likeRepository.findByMemberIdAndReviewId(memberId, reviewId)).willReturn(Optional.of(mockLike));
-        given(reviewServiceApi.findReviewByIdForUpdate(reviewId)).willReturn(mockReview);
+        given(reviewServiceApi.getReviewByIdForUpdate(reviewId)).willReturn(mockReview);
         // When
         likeService.cancelLike(memberId, reviewId);
 
