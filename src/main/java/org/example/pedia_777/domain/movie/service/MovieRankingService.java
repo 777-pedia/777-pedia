@@ -1,5 +1,6 @@
 package org.example.pedia_777.domain.movie.service;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
@@ -33,10 +34,15 @@ public class MovieRankingService {
     public void addMovieScore(Long movieId, double score) {
 
         LocalDate today = LocalDate.now();
+        String dailyKey = getDailyKey(today);
+        String weeklyKey = getWeeklyKey(today);
 
         // 오늘 날짜의 일간/주간 Sorted Set에 모두 점수 추가
-        redisTemplate.opsForZSet().incrementScore(getDailyKey(today), String.valueOf(movieId), score);
+        redisTemplate.opsForZSet().incrementScore(dailyKey, String.valueOf(movieId), score);
         redisTemplate.opsForZSet().incrementScore(getWeeklyKey(today), String.valueOf(movieId), score);
+
+        redisTemplate.expire(dailyKey, Duration.ofHours(26));
+        redisTemplate.expire(weeklyKey, Duration.ofDays(8));
     }
 
     // "movie_scores:daily:20250930"
