@@ -32,7 +32,7 @@ public class Like extends BaseTimeEntity {
     private Review review;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Like(Member member, Review review) {
+    private Like(Member member, Review review) {
         this.member = member;
         this.review = review;
     }

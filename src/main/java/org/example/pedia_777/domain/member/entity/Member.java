@@ -28,7 +28,7 @@ public class Member extends BaseTimeEntity {
     private String nickname;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public Member(String email, String password, String nickname) {
+    private Member(String email, String password, String nickname) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
