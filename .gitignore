@@ -44,3 +44,6 @@ src/main/resources/application-personal.properties
 ### 환경변수 ###
 .env
 .env.local
+
+### dummy_data.sql ###
+/db/init/large_dummy_data.sql

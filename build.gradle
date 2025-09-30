@@ -30,12 +30,20 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // testcontainers
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:mysql'
 
     // bcrypt
     implementation 'at.favre.lib:bcrypt:0.10.2'
@@ -48,6 +56,9 @@ dependencies {
     // queryDSL
     implementation 'io.github.openfeign.querydsl:querydsl-jpa:7.0'
     annotationProcessor 'io.github.openfeign.querydsl:querydsl-apt:7.0:jpa'
+
+    // cache
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.2.2'
 }
 
 tasks.named('test') {

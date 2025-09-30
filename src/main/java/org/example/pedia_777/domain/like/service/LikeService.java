@@ -3,10 +3,10 @@ package org.example.pedia_777.domain.like.service;
 import lombok.RequiredArgsConstructor;
 import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.exception.BusinessException;
-import org.example.pedia_777.domain.like.code.LikeErrorCode;
 import org.example.pedia_777.domain.like.dto.response.LikeResponse;
 import org.example.pedia_777.domain.like.dto.response.LikedReviewResponse;
 import org.example.pedia_777.domain.like.entity.Like;
+import org.example.pedia_777.domain.like.error.LikeErrorCode;
 import org.example.pedia_777.domain.like.repository.LikeRepository;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.service.MemberServiceApi;
@@ -36,8 +36,8 @@ public class LikeService implements LikeServiceApi {
             throw new BusinessException(LikeErrorCode.LIKE_ALREADY_EXISTS);
         }
 
-        Member currentMember = memberServiceApi.findMemberById(memberId);
-        Review currentReview = reviewServiceApi.findReviewById(reviewId);
+        Member currentMember = memberServiceApi.getMemberById(memberId);
+        Review currentReview = reviewServiceApi.getReviewById(reviewId);
 
         likeRepository.save(Like.of(currentMember, currentReview));
 
@@ -54,7 +54,7 @@ public class LikeService implements LikeServiceApi {
         Like foundLike = likeRepository.findByMemberIdAndReviewId(memberId, reviewId)
                 .orElseThrow(() -> new BusinessException(LikeErrorCode.LIKE_NOT_FOUND));
 
-        Review currentReview = reviewServiceApi.findReviewById(reviewId);
+        Review currentReview = reviewServiceApi.getReviewById(reviewId);
         likeRepository.delete(foundLike);
 
         //동시성 이슈 발생 가능 3

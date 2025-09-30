@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Optional;
 import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.exception.BusinessException;
-import org.example.pedia_777.domain.like.code.LikeErrorCode;
 import org.example.pedia_777.domain.like.dto.response.LikeResponse;
 import org.example.pedia_777.domain.like.dto.response.LikedReviewResponse;
 import org.example.pedia_777.domain.like.entity.Like;
+import org.example.pedia_777.domain.like.error.LikeErrorCode;
 import org.example.pedia_777.domain.like.repository.LikeRepository;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.service.MemberServiceApi;
@@ -33,6 +33,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 @ExtendWith(MockitoExtension.class)
 public class LikeServiceTest {
@@ -70,7 +71,6 @@ public class LikeServiceTest {
         );
         mockReview = Review.create("comment", 4, 1L, mockMovie, mockMember);
         mockReview2 = Review.create("comment", 2, 1L, mockMovie, mockMember);
-
     }
 
     @Test
@@ -78,8 +78,8 @@ public class LikeServiceTest {
     void addLike_Success() {
         //Given
         given(likeRepository.existsByMemberIdAndReviewId(memberId, reviewId)).willReturn(false);
-        given(reviewServiceApi.findReviewById(reviewId)).willReturn(mockReview);
-        given(memberServiceApi.findMemberById(memberId)).willReturn(mockMember);
+        given(reviewServiceApi.getReviewById(reviewId)).willReturn(mockReview);
+        given(memberServiceApi.getMemberById(memberId)).willReturn(mockMember);
 
         //When
         LikeResponse response = likeService.addLike(memberId, reviewId);
@@ -93,7 +93,7 @@ public class LikeServiceTest {
 
     @Test
     @DisplayName("이미 좋아요를 누른 리뷰에 다시 좋아요를 시도할 경우 예외 발생 테스트")
-    void cancelLike_LikeNotFound_ThrowsException() {
+    void addLike_AlreadyExists_ThrowsException() {
         // Given
         given(likeRepository.existsByMemberIdAndReviewId(memberId, reviewId)).willReturn(true);
         // When & Then
@@ -109,7 +109,7 @@ public class LikeServiceTest {
         Like mockLike = Like.of(mockMember, mockReview);
 
         given(likeRepository.findByMemberIdAndReviewId(memberId, reviewId)).willReturn(Optional.of(mockLike));
-        given(reviewServiceApi.findReviewById(reviewId)).willReturn(mockReview);
+        given(reviewServiceApi.getReviewById(reviewId)).willReturn(mockReview);
 
         // When
         likeService.cancelLike(memberId, reviewId);
@@ -121,7 +121,7 @@ public class LikeServiceTest {
 
     @Test
     @DisplayName("존재하지 않는 좋아요 취소시 예외 발생 테스트")
-    void cancelLike_Success_ThrowsException() {
+    void cancelLike_NotFound_ThrowsException() {
         //Given
         given(likeRepository.findByMemberIdAndReviewId(memberId, reviewId)).willReturn(Optional.empty());
 
@@ -135,20 +135,71 @@ public class LikeServiceTest {
     @DisplayName("좋아요를 누른 리뷰 조회가 성공적으로 수행된다.")
     void getLikedReviews_Success() {
         //given
+        int page = 1;
+        int size = 10;
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(0, size, sort);
+
         Like like1 = Like.of(mockMember, mockReview);
         Like like2 = Like.of(mockMember, mockReview2);
-        Pageable pageable = PageRequest.of(0, 10);
 
         given(likeRepository.findByMemberId(memberId, pageable)).willReturn(
                 new PageImpl<>(List.of(like1, like2), pageable, 2));
 
         //when
-        PageResponse<LikedReviewResponse> likedReviews = likeService.getLikedReviews(memberId, pageable);
+        PageResponse<LikedReviewResponse> likedReviews = likeService.getLikedReviews(memberId, page, size);
 
         //then
         assertThat(likedReviews.content().size()).isEqualTo(2);
         assertThat(likedReviews.content().get(0).comment()).isEqualTo("comment");
         verify(likeRepository, times(1)).findByMemberId(memberId, pageable);
     }
+
+    @Test
+    @DisplayName("페이지가 0 이하일 때 첫 번째 페이지로 조회된다.")
+    void getLikedReviews_PageZeroOrNegative() {
+        //given
+        int invalidPage = -1;
+        int size = 10;
+
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable expectedPageable = PageRequest.of(0, size, sort);  // Math.max(0, -1-1) = 0
+
+        Like like1 = Like.of(mockMember, mockReview);
+
+        given(likeRepository.findByMemberId(memberId, expectedPageable)).willReturn(
+                new PageImpl<>(List.of(like1), expectedPageable, 1));
+
+        //when
+        PageResponse<LikedReviewResponse> result = likeService.getLikedReviews(memberId, invalidPage, size);
+
+        //then
+        assertThat(result.content().get(0).comment()).isEqualTo("comment");
+        verify(likeRepository).findByMemberId(memberId, expectedPageable);
+    }
+
+    @Test
+    @DisplayName("좋아요한 리뷰가 없을 때 빈 페이지가 반환된다.")
+    void getLikedReviews_EmptyResult() {
+        //given
+        int page = 1;
+        int size = 10;
+
+        Sort sort = Sort.by("createdAt").descending();
+        Pageable pageable = PageRequest.of(0, size, sort);
+
+        given(likeRepository.findByMemberId(memberId, pageable)).willReturn(
+                new PageImpl<>(List.of(), pageable, 0));
+
+        //when
+        PageResponse<LikedReviewResponse> result = likeService.getLikedReviews(memberId, page, size);
+
+        //then
+        assertThat(result.content()).isEmpty();
+        assertThat(result.totalElements()).isEqualTo(0);
+        assertThat(result.totalPages()).isEqualTo(0);
+        verify(likeRepository).findByMemberId(memberId, pageable);
+    }
+
 
 }

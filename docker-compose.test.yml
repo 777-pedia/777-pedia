@@ -1,0 +1,18 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: movie-test-mysql-db
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: movie_review_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root_password
+      TZ: Asia/Seoul
+    volumes:
+      - ./movie.sql:/docker-entrypoint-initdb.d/movie.sql
+
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
