@@ -32,7 +32,7 @@ public class LikeController {
 
         LikeResponse response = likeService.addLike(authMember.id(), reviewId);
 
-        return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS, response);
+        return ResponseHelper.success(CommonSuccessCode.CREATED_SUCCESS, response);
     }
 
     @DeleteMapping("{reviewId}/likes")
@@ -41,7 +41,7 @@ public class LikeController {
 
         LikeResponse response = likeService.cancelLike(authMember.id(), reviewId);
 
-        return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS, response);
+        return ResponseHelper.success(CommonSuccessCode.DELETED_SUCCESS, response);
     }
 
     @GetMapping("/likes")
