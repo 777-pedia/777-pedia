@@ -10,6 +10,8 @@ import static org.mockito.Mockito.verify;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.exception.BusinessException;
 import org.example.pedia_777.domain.like.dto.response.LikeResponse;
@@ -38,8 +40,10 @@ import org.springframework.data.domain.Sort;
 @ExtendWith(MockitoExtension.class)
 public class LikeServiceTest {
 
+    private static final Integer parallelism = 5;
     final long memberId = 1L;
     final long reviewId = 1L;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(parallelism);
     @Mock
     private LikeRepository likeRepository;
     @Mock
@@ -154,7 +158,7 @@ public class LikeServiceTest {
         assertThat(likedReviews.content().get(0).comment()).isEqualTo("comment");
         verify(likeRepository, times(1)).findByMemberId(memberId, pageable);
     }
-
+    
     @Test
     @DisplayName("페이지가 0 이하일 때 첫 번째 페이지로 조회된다.")
     void getLikedReviews_PageZeroOrNegative() {
