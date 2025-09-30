@@ -29,7 +29,7 @@ public class FavoriteService {
     @Transactional
     public FavoriteAddResponse addFavorite(Long memberId, Long movieId) {
 
-        Member member = memberServiceApi.findMemberById(memberId);
+        Member member = memberServiceApi.getMemberById(memberId);
         Movie movie = movieServiceApi.getMovieEntity((movieId));
 
         if (favoriteRepository.findByMemberIdAndMovieId(memberId, movieId).isPresent()) {

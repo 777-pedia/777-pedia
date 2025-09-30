@@ -36,7 +36,7 @@ public class LikeService implements LikeServiceApi {
             throw new BusinessException(LikeErrorCode.LIKE_ALREADY_EXISTS);
         }
 
-        Member currentMember = memberServiceApi.findMemberById(memberId);
+        Member currentMember = memberServiceApi.getMemberById(memberId);
         Review currentReview = reviewServiceApi.getReviewById(reviewId);
 
         likeRepository.save(Like.of(currentMember, currentReview));
