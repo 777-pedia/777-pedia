@@ -8,15 +8,18 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.example.pedia_777.common.config.JwtAuthenticationFilter;
+import org.example.pedia_777.common.config.JwtUtil;
 import org.example.pedia_777.domain.search.dto.response.PopularKeywordResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -24,7 +27,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
 @SpringBootTest
-@ActiveProfiles("test")
+@Disabled("로컬 환경에서만 실행합니다.")
 class PopularKeywordServiceTest {
 
     // @Container와 @ServiceConnection으로 사용될 컨테이너 정의
@@ -36,10 +39,12 @@ class PopularKeywordServiceTest {
     @ServiceConnection
     private static final GenericContainer<?> redisContainer = new GenericContainer<>("redis:7.2-alpine")
             .withExposedPorts(6379);
-
+    @MockitoBean // 가짜 객체 주입
+    JwtUtil jwtUtil;
+    @MockitoBean // 가짜 객체 주입
+    JwtAuthenticationFilter jwtAuthenticationFilter;
     @Autowired
     private PopularKeywordService popularKeywordService;
-
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
