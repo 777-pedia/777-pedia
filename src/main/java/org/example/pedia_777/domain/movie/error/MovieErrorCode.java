@@ -1,4 +1,4 @@
-package org.example.pedia_777.domain.movie.code;
+package org.example.pedia_777.domain.movie.error;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -2,7 +2,7 @@ package org.example.pedia_777.domain.search.dto.response;
 
 import static org.example.pedia_777.common.util.StringHelper.splitSafely;
 
-public record MovieSearchResponse(
+public record SearchMovieResponse(
         Long id,
         String title,
         String director,
@@ -14,8 +14,8 @@ public record MovieSearchResponse(
 ) {
 
 
-    public static MovieSearchResponse from(MovieSearchProjection projectionDto) {
-        return new MovieSearchResponse(
+    public static SearchMovieResponse from(SearchMovieProjection projectionDto) {
+        return new SearchMovieResponse(
                 projectionDto.id(),
                 projectionDto.title(),
                 projectionDto.director(),

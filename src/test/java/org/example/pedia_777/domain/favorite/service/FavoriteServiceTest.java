@@ -91,7 +91,7 @@ class FavoriteServiceTest {
 
         // given
         given(memberServiceApi.findMemberById(memberId)).willReturn(testMember);
-        given(movieServiceApi.findMovieById(movieId)).willReturn(testMovie);
+        given(movieServiceApi.getMovieEntity(movieId)).willReturn(testMovie);
         given(favoriteRepository.findByMemberIdAndMovieId(memberId, movieId)).willReturn(Optional.empty());
 
         // when
@@ -111,7 +111,7 @@ class FavoriteServiceTest {
 
         // given
         given(memberServiceApi.findMemberById(memberId)).willReturn(testMember);
-        given(movieServiceApi.findMovieById(movieId)).willReturn(testMovie);
+        given(movieServiceApi.getMovieEntity(movieId)).willReturn(testMovie);
         given(favoriteRepository.findByMemberIdAndMovieId(memberId, movieId)).willReturn(
                 Optional.of(Favorite.create(testMember, testMovie)));
 
