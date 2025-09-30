@@ -11,6 +11,7 @@ import org.example.pedia_777.domain.review.dto.request.ReviewUpdateRequest;
 import org.example.pedia_777.domain.review.dto.response.ReviewResponse;
 import org.example.pedia_777.domain.review.entity.ReviewSort;
 import org.example.pedia_777.domain.review.service.ReviewService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,6 +31,7 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/reviews")
     public Response<ReviewResponse> createReview(
             @AuthenticationPrincipal AuthMember authMember,
