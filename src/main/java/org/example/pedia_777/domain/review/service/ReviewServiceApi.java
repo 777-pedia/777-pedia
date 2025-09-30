@@ -3,5 +3,5 @@ package org.example.pedia_777.domain.review.service;
 import org.example.pedia_777.domain.review.entity.Review;
 
 public interface ReviewServiceApi {
-    Review findReviewById(Long reviewId);
+    Review getReviewById(Long reviewId);
 }

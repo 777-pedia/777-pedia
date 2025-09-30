@@ -9,12 +9,12 @@ import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.service.MemberServiceApi;
 import org.example.pedia_777.domain.movie.entity.Movie;
 import org.example.pedia_777.domain.movie.service.MovieServiceApi;
-import org.example.pedia_777.domain.review.code.ReviewErrorCode;
 import org.example.pedia_777.domain.review.dto.request.ReviewCreateRequest;
 import org.example.pedia_777.domain.review.dto.request.ReviewUpdateRequest;
 import org.example.pedia_777.domain.review.dto.response.ReviewResponse;
 import org.example.pedia_777.domain.review.entity.Review;
 import org.example.pedia_777.domain.review.entity.ReviewSort;
+import org.example.pedia_777.domain.review.error.ReviewErrorCode;
 import org.example.pedia_777.domain.review.repository.ReviewRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,8 +33,8 @@ public class ReviewService implements ReviewServiceApi {
 
     @Transactional
     public ReviewResponse createReview(AuthMember authMember, ReviewCreateRequest request) {
-        Member member = memberServiceApi.findMemberById(authMember.id());
-        Movie movie = movieServiceApi.findMovieById(request.movieId());
+        Member member = memberServiceApi.getMemberById(authMember.id());
+        Movie movie = movieServiceApi.getMovieEntity(request.movieId());
 
         Review review = Review.create(
                 request.comment(),
@@ -50,7 +50,7 @@ public class ReviewService implements ReviewServiceApi {
 
     @Transactional(readOnly = true)
     public PageResponse<ReviewResponse> getReviews(Long movieId, int page, int size, ReviewSort sort) {
-        movieServiceApi.findMovieById(movieId);
+        movieServiceApi.getMovieEntity(movieId);
 
         Sort sortOrder;
         if (sort == null || sort == ReviewSort.LIKES) {
@@ -87,7 +87,7 @@ public class ReviewService implements ReviewServiceApi {
     }
 
     @Override
-    public Review findReviewById(Long reviewId) {
+    public Review getReviewById(Long reviewId) {
         return reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new BusinessException(ReviewErrorCode.REVIEW_NOT_FOUND));
     }

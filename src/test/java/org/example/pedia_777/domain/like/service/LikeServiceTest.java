@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Optional;
 import org.example.pedia_777.common.dto.PageResponse;
 import org.example.pedia_777.common.exception.BusinessException;
-import org.example.pedia_777.domain.like.code.LikeErrorCode;
 import org.example.pedia_777.domain.like.dto.response.LikeResponse;
 import org.example.pedia_777.domain.like.dto.response.LikedReviewResponse;
 import org.example.pedia_777.domain.like.entity.Like;
+import org.example.pedia_777.domain.like.error.LikeErrorCode;
 import org.example.pedia_777.domain.like.repository.LikeRepository;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.service.MemberServiceApi;
@@ -78,8 +78,8 @@ public class LikeServiceTest {
     void addLike_Success() {
         //Given
         given(likeRepository.existsByMemberIdAndReviewId(memberId, reviewId)).willReturn(false);
-        given(reviewServiceApi.findReviewById(reviewId)).willReturn(mockReview);
-        given(memberServiceApi.findMemberById(memberId)).willReturn(mockMember);
+        given(reviewServiceApi.getReviewById(reviewId)).willReturn(mockReview);
+        given(memberServiceApi.getMemberById(memberId)).willReturn(mockMember);
 
         //When
         LikeResponse response = likeService.addLike(memberId, reviewId);
@@ -109,7 +109,7 @@ public class LikeServiceTest {
         Like mockLike = Like.of(mockMember, mockReview);
 
         given(likeRepository.findByMemberIdAndReviewId(memberId, reviewId)).willReturn(Optional.of(mockLike));
-        given(reviewServiceApi.findReviewById(reviewId)).willReturn(mockReview);
+        given(reviewServiceApi.getReviewById(reviewId)).willReturn(mockReview);
 
         // When
         likeService.cancelLike(memberId, reviewId);

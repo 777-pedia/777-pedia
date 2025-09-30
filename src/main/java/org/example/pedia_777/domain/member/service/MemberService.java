@@ -47,19 +47,19 @@ public class MemberService implements MemberServiceApi {
     }
 
     @Override
-    public Member findMemberByEmail(String email) {
+    public Member getMemberByEmail(String email) {
         return memberRepository.findByEmail(email).orElseThrow(
                 () -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 
     @Override
-    public Member findMemberById(Long memberId) {
+    public Member getMemberById(Long memberId) {
         return memberRepository.findById(memberId).orElseThrow(
                 () -> new BusinessException(MemberErrorCode.NOT_FOUND_MEMBER));
     }
 
     public MemberLoginResponse login(MemberLoginRequest memberLoginRequest) {
-        Member findMember = findMemberByEmail(memberLoginRequest.email());
+        Member findMember = getMemberByEmail(memberLoginRequest.email());
 
         if (!passwordEncoder.matches(memberLoginRequest.password(), findMember.getPassword())) {
             throw new BusinessException(MemberErrorCode.NOT_FOUND_EMAIL_PASSWORD);

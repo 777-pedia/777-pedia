@@ -1,0 +1,15 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        show_sql: true
+
+  sql:
+    init:
+      mode: never
+
+jwt:
+  secret:
+    key: dummysecretkeydummysecretkeydummysecretkeydummysecretkeydummysecretkeydummysecretkey
