@@ -24,28 +24,31 @@ public class SearchController {
     private final SearchService searchService;
     private final PopularSearchService popularSearchService;
 
+    // v1: DB 조회
     @GetMapping("/api/v1/search")
     public ResponseEntity<GlobalApiResponse<PageResponse<MovieSearchResponse>>> searchMovies(
             @RequestParam String keyword,
             @PageableDefault(size = 10) Pageable pageable) {
 
+        popularSearchService.incrementSearchKeyword(keyword);
         return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS,
                 searchService.searchMovies(keyword, pageable));
     }
 
+    // v2: Redis 적용
     @GetMapping("/api/v2/search")
     public ResponseEntity<GlobalApiResponse<PageResponse<MovieSearchResponse>>> searchMoviesWithLocalCache(
             @RequestParam String keyword,
             @PageableDefault(size = 10) Pageable pageable) {
 
+        popularSearchService.incrementSearchKeyword(keyword);
         return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS,
-                searchService.searchMoviesWithLocalCache(keyword, pageable));
+                searchService.searchMoviesWithCache(keyword, pageable));
     }
 
     @GetMapping("/api/v1/search/popular")
     public ResponseEntity<GlobalApiResponse<List<PopularKeywordResponse>>> getPopularKeywords() {
 
-        // TODO 현재는 UI 기획대로 바로 이전 시간대 데이터만 조회하도록 구현, 시간대 선택 가능하도록 RequestParam 적용 가능
         return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS,
                 popularSearchService.getPopularKeywordsOfPreviousHour());
     }
