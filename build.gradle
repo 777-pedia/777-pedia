@@ -59,6 +59,8 @@ dependencies {
 
     // cache
     implementation 'com.github.ben-manes.caffeine:caffeine:3.2.2'
+
+    testImplementation 'com.h2database:h2'
 }
 
 tasks.named('test') {
