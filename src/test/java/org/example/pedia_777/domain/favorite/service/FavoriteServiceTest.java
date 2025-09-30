@@ -4,7 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -21,6 +24,7 @@ import org.example.pedia_777.domain.favorite.repository.FavoriteRepository;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.service.MemberServiceApi;
 import org.example.pedia_777.domain.movie.entity.Movie;
+import org.example.pedia_777.domain.movie.service.MovieRankingService;
 import org.example.pedia_777.domain.movie.service.MovieServiceApi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,6 +50,8 @@ class FavoriteServiceTest {
     private MemberServiceApi memberServiceApi;
     @Mock
     private MovieServiceApi movieServiceApi;
+    @Mock
+    private MovieRankingService movieRankingService;
     // 테스트 데이터
     private Member testMember;
     private Movie testMovie;
@@ -93,6 +99,7 @@ class FavoriteServiceTest {
         given(memberServiceApi.getMemberById(memberId)).willReturn(testMember);
         given(movieServiceApi.getMovieEntity(movieId)).willReturn(testMovie);
         given(favoriteRepository.findByMemberIdAndMovieId(memberId, movieId)).willReturn(Optional.empty());
+        doNothing().when(movieRankingService).addMovieScore(anyLong(), anyDouble());
 
         // when
         FavoriteAddResponse response = favoriteService.addFavorite(memberId, movieId);

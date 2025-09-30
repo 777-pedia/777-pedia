@@ -11,6 +11,7 @@ import org.example.pedia_777.domain.favorite.repository.FavoriteRepository;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.service.MemberServiceApi;
 import org.example.pedia_777.domain.movie.entity.Movie;
+import org.example.pedia_777.domain.movie.service.MovieRankingService;
 import org.example.pedia_777.domain.movie.service.MovieServiceApi;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,7 @@ public class FavoriteService {
     private final FavoriteRepository favoriteRepository;
     private final MovieServiceApi movieServiceApi;
     private final MemberServiceApi memberServiceApi;
+    private final MovieRankingService movieRankingService;
 
     @Transactional
     public FavoriteAddResponse addFavorite(Long memberId, Long movieId) {
@@ -38,6 +40,8 @@ public class FavoriteService {
 
         Favorite favorite = Favorite.create(member, movie);
         favoriteRepository.save(favorite);
+
+        movieRankingService.addMovieScore(movieId, 0.5);
 
         return FavoriteAddResponse.of(movieId, movie.getTitle(), true);
     }

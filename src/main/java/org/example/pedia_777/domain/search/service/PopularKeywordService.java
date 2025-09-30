@@ -35,7 +35,7 @@ public class PopularKeywordService {
     }
 
     // 이전 시간대(정각 ~ 정각 사이)의 인기 검색어 10개 조회
-    @Cacheable(cacheNames = CacheType.NAME_POPULAR_KEYWORDS, cacheManager = "redisCacheManager",
+    @Cacheable(cacheNames = CacheType.NAME_LIST_POPULAR_KEYWORDS, cacheManager = "redisCacheManager",
             key = "#root.methodName + ':' + #root.target.getPreviousHourKey()")
     public List<PopularKeywordResponse> getPopularKeywordsOfPreviousHour() {
 

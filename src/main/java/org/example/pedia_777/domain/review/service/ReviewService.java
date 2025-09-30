@@ -8,6 +8,7 @@ import org.example.pedia_777.common.exception.BusinessException;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.service.MemberServiceApi;
 import org.example.pedia_777.domain.movie.entity.Movie;
+import org.example.pedia_777.domain.movie.service.MovieRankingService;
 import org.example.pedia_777.domain.movie.service.MovieServiceApi;
 import org.example.pedia_777.domain.review.dto.request.ReviewCreateRequest;
 import org.example.pedia_777.domain.review.dto.request.ReviewUpdateRequest;
@@ -30,6 +31,7 @@ public class ReviewService implements ReviewServiceApi {
     private final ReviewRepository reviewRepository;
     private final MemberServiceApi memberServiceApi;
     private final MovieServiceApi movieServiceApi;
+    private final MovieRankingService movieRankingService;
 
     @Transactional
     public ReviewResponse createReview(AuthMember authMember, ReviewCreateRequest request) {
@@ -45,6 +47,7 @@ public class ReviewService implements ReviewServiceApi {
         );
 
         Review savedReview = reviewRepository.save(review);
+        movieRankingService.addMovieScore(request.movieId(), 1.0);
         return ReviewResponse.from(savedReview);
     }
 

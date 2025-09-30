@@ -1,12 +1,14 @@
 package org.example.pedia_777.domain.movie.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.pedia_777.common.config.CacheType;
 import org.example.pedia_777.common.exception.BusinessException;
 import org.example.pedia_777.domain.movie.dto.MovieDetailResponse;
 import org.example.pedia_777.domain.movie.entity.Movie;
 import org.example.pedia_777.domain.movie.error.MovieErrorCode;
 import org.example.pedia_777.domain.movie.repository.MovieRepository;
 import org.example.pedia_777.domain.search.dto.response.SearchMovieResponse;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,13 @@ public class MovieService implements MovieServiceApi {
 
     private final MovieRepository movieRepository;
 
+    @Cacheable(
+            cacheNames = CacheType.NAME_MOVIE_DETAILS_TOP_10,
+            cacheManager = "redisCacheManager",
+            key = "#movieId",
+            condition = "@movieRankingService.isDailyTop10(#movieId) or @movieRankingService.isWeeklyTop10(#movieId)",
+            sync = true
+    )
     public MovieDetailResponse getMovieDetails(Long movieId) {
 
         return MovieDetailResponse.from(getMovieEntity(movieId));

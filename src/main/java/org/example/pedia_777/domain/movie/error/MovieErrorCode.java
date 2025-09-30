@@ -9,7 +9,8 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum MovieErrorCode implements Code {
 
-    MOVIE_NOT_FOUND(HttpStatus.NOT_FOUND, "영화를 찾을 수 없습니다.");
+    MOVIE_NOT_FOUND(HttpStatus.NOT_FOUND, "영화를 찾을 수 없습니다."),
+    INVALID_RANKING_PERIOD(HttpStatus.BAD_REQUEST, "존재하지 않는 영화 랭킹 기간입니다.");
 
     private final HttpStatus httpStatus;
     private final String messageTemplate;

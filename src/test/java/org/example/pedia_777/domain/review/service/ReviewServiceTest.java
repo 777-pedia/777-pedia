@@ -4,8 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
 import java.time.LocalDate;
@@ -16,6 +19,7 @@ import org.example.pedia_777.common.exception.BusinessException;
 import org.example.pedia_777.domain.member.entity.Member;
 import org.example.pedia_777.domain.member.service.MemberServiceApi;
 import org.example.pedia_777.domain.movie.entity.Movie;
+import org.example.pedia_777.domain.movie.service.MovieRankingService;
 import org.example.pedia_777.domain.movie.service.MovieServiceApi;
 import org.example.pedia_777.domain.review.dto.request.ReviewCreateRequest;
 import org.example.pedia_777.domain.review.dto.request.ReviewUpdateRequest;
@@ -42,6 +46,9 @@ class ReviewServiceTest {
 
     @Mock
     private MovieServiceApi movieServiceApi;
+
+    @Mock
+    private MovieRankingService movieRankingService;
 
     @InjectMocks
     private ReviewService reviewService;
@@ -74,6 +81,7 @@ class ReviewServiceTest {
         given(memberServiceApi.getMemberById(authMember.id())).willReturn(member);
         given(movieServiceApi.getMovieEntity(request.movieId())).willReturn(movie);
         given(reviewRepository.save(any(Review.class))).willReturn(review);
+        doNothing().when(movieRankingService).addMovieScore(anyLong(), anyDouble());
 
         // when
         ReviewResponse response = reviewService.createReview(authMember, request);
