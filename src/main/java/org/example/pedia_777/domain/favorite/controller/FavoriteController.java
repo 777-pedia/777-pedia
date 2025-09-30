@@ -3,8 +3,8 @@ package org.example.pedia_777.domain.favorite.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.pedia_777.common.code.CommonSuccessCode;
 import org.example.pedia_777.common.dto.AuthMember;
-import org.example.pedia_777.common.dto.GlobalApiResponse;
 import org.example.pedia_777.common.dto.PageResponse;
+import org.example.pedia_777.common.dto.Response;
 import org.example.pedia_777.common.util.ResponseHelper;
 import org.example.pedia_777.domain.favorite.dto.response.FavoriteAddResponse;
 import org.example.pedia_777.domain.favorite.dto.response.FavoriteMovieResponse;
@@ -30,7 +30,7 @@ public class FavoriteController {
     private final FavoriteService favoriteService;
 
     @PostMapping("/{movieId}/favorites")
-    public ResponseEntity<GlobalApiResponse<FavoriteAddResponse>> addFavorite(
+    public ResponseEntity<Response<FavoriteAddResponse>> addFavorite(
             @AuthenticationPrincipal AuthMember authMember,
             @PathVariable Long movieId) {
 
@@ -40,7 +40,7 @@ public class FavoriteController {
     }
 
     @DeleteMapping("/{movieId}/favorites")
-    public ResponseEntity<GlobalApiResponse<Void>> removeFavorite(
+    public ResponseEntity<Response<Void>> removeFavorite(
             @AuthenticationPrincipal AuthMember authMember,
             @PathVariable Long movieId) {
 
@@ -50,7 +50,7 @@ public class FavoriteController {
     }
 
     @GetMapping("/favorites")
-    public ResponseEntity<GlobalApiResponse<PageResponse<FavoriteMovieResponse>>> getMyFavorites(
+    public ResponseEntity<Response<PageResponse<FavoriteMovieResponse>>> getMyFavorites(
             @AuthenticationPrincipal AuthMember authMember,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {

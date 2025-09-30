@@ -3,8 +3,8 @@ package org.example.pedia_777.domain.search.controller;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.pedia_777.common.code.CommonSuccessCode;
-import org.example.pedia_777.common.dto.GlobalApiResponse;
 import org.example.pedia_777.common.dto.PageResponse;
+import org.example.pedia_777.common.dto.Response;
 import org.example.pedia_777.common.util.ResponseHelper;
 import org.example.pedia_777.domain.search.dto.response.PopularKeywordResponse;
 import org.example.pedia_777.domain.search.dto.response.SearchMovieResponse;
@@ -26,7 +26,7 @@ public class SearchController {
 
     // v1: DB 조회
     @GetMapping("/api/v1/search")
-    public ResponseEntity<GlobalApiResponse<PageResponse<SearchMovieResponse>>> searchMovies(
+    public ResponseEntity<Response<PageResponse<SearchMovieResponse>>> searchMovies(
             @RequestParam String keyword,
             @PageableDefault(size = 10) Pageable pageable) {
 
@@ -37,7 +37,7 @@ public class SearchController {
 
     // v2: Redis 적용
     @GetMapping("/api/v2/search")
-    public ResponseEntity<GlobalApiResponse<PageResponse<SearchMovieResponse>>> searchMoviesWithLocalCache(
+    public ResponseEntity<Response<PageResponse<SearchMovieResponse>>> searchMoviesWithLocalCache(
             @RequestParam String keyword,
             @PageableDefault(size = 10) Pageable pageable) {
 
@@ -47,7 +47,7 @@ public class SearchController {
     }
 
     @GetMapping("/api/v1/search/popular")
-    public ResponseEntity<GlobalApiResponse<List<PopularKeywordResponse>>> getPopularKeywords() {
+    public ResponseEntity<Response<List<PopularKeywordResponse>>> getPopularKeywords() {
 
         return ResponseHelper.success(CommonSuccessCode.REQUEST_SUCCESS,
                 popularKeywordService.getPopularKeywordsOfPreviousHour());

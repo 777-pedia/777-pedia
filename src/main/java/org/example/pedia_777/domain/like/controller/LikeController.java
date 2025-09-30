@@ -3,8 +3,8 @@ package org.example.pedia_777.domain.like.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.pedia_777.common.code.CommonSuccessCode;
 import org.example.pedia_777.common.dto.AuthMember;
-import org.example.pedia_777.common.dto.GlobalApiResponse;
 import org.example.pedia_777.common.dto.PageResponse;
+import org.example.pedia_777.common.dto.Response;
 import org.example.pedia_777.common.util.ResponseHelper;
 import org.example.pedia_777.domain.like.dto.response.LikeResponse;
 import org.example.pedia_777.domain.like.dto.response.LikedReviewResponse;
@@ -27,7 +27,7 @@ public class LikeController {
     private final LikeService likeService;
 
     @PostMapping("{reviewId}/likes")
-    public ResponseEntity<GlobalApiResponse<LikeResponse>> addLike(
+    public ResponseEntity<Response<LikeResponse>> addLike(
             @AuthenticationPrincipal AuthMember authMember, @PathVariable Long reviewId) {
 
         LikeResponse response = likeService.addLike(authMember.id(), reviewId);
@@ -36,7 +36,7 @@ public class LikeController {
     }
 
     @DeleteMapping("{reviewId}/likes")
-    public ResponseEntity<GlobalApiResponse<LikeResponse>> cancelLike(
+    public ResponseEntity<Response<LikeResponse>> cancelLike(
             @AuthenticationPrincipal AuthMember authMember, @PathVariable Long reviewId) {
 
         LikeResponse response = likeService.cancelLike(authMember.id(), reviewId);
@@ -45,7 +45,7 @@ public class LikeController {
     }
 
     @GetMapping("/likes")
-    public ResponseEntity<GlobalApiResponse<PageResponse<LikedReviewResponse>>> getLikedReviews(
+    public ResponseEntity<Response<PageResponse<LikedReviewResponse>>> getLikedReviews(
             @AuthenticationPrincipal AuthMember authMember,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size

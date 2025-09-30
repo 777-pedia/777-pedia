@@ -7,7 +7,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.example.pedia_777.domain.like.dto.response.LikeResponse;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.core.annotation.Order;
@@ -41,11 +40,11 @@ public class DistributedLockAop {
                 log.info("락을 획들 할 수 없습니다. method: {}  key: {}", method.getName(), key);
                 return;
             }
-//            aopForTransaction.proceed(joinPoint);
-            LikeResponse proceed = (LikeResponse) joinPoint.proceed();
-            System.out.println(
-                    "Thread.currentThread().getName() = " + Thread.currentThread().getName() + " , available = "
-                            + available + ", proceed = " + proceed);
+            aopForTransaction.proceed(joinPoint);
+//            LikeResponse proceed = (LikeResponse) joinPoint.proceed();
+//            System.out.println(
+//                    "Thread.currentThread().getName() = " + Thread.currentThread().getName() + " , available = "
+//                            + available + ", proceed = " + proceed);
         } catch (Exception e) {
             throw new IllegalArgumentException("예외가 발생하였습니다.");
 

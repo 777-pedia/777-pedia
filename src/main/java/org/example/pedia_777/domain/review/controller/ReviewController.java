@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.pedia_777.common.code.CommonSuccessCode;
 import org.example.pedia_777.common.dto.AuthMember;
-import org.example.pedia_777.common.dto.GlobalApiResponse;
 import org.example.pedia_777.common.dto.PageResponse;
+import org.example.pedia_777.common.dto.Response;
 import org.example.pedia_777.common.util.ResponseHelper;
 import org.example.pedia_777.domain.review.dto.request.ReviewCreateRequest;
 import org.example.pedia_777.domain.review.dto.request.ReviewUpdateRequest;
@@ -32,7 +32,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping("/reviews")
-    public ResponseEntity<GlobalApiResponse<ReviewResponse>> createReview(
+    public ResponseEntity<Response<ReviewResponse>> createReview(
             @AuthenticationPrincipal AuthMember authMember,
             @Valid @RequestBody ReviewCreateRequest request) {
 
@@ -41,7 +41,7 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews")
-    public ResponseEntity<GlobalApiResponse<PageResponse<ReviewResponse>>> getReviewList(
+    public ResponseEntity<Response<PageResponse<ReviewResponse>>> getReviewList(
             @RequestParam Long movieId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -52,7 +52,7 @@ public class ReviewController {
     }
 
     @PutMapping("/reviews/{reviewId}")
-    public ResponseEntity<GlobalApiResponse<ReviewResponse>> updateReview(
+    public ResponseEntity<Response<ReviewResponse>> updateReview(
             @PathVariable Long reviewId,
             @AuthenticationPrincipal AuthMember authMember,
             @RequestBody ReviewUpdateRequest request) {
@@ -62,7 +62,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/reviews/{reviewId}")
-    public ResponseEntity<GlobalApiResponse<Void>> deleteReview(
+    public ResponseEntity<Response<Void>> deleteReview(
             @PathVariable Long reviewId,
             @AuthenticationPrincipal AuthMember authMember) {
 
