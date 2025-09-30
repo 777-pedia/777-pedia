@@ -31,8 +31,8 @@ public class CacheConfig {
                 .cacheDefaults(defaultConfig)
 
                 .withCacheConfiguration(
-                        CacheType.NAME_POPULAR_KEYWORDS, // "popularKeywords"
-                        defaultConfig.entryTtl(CacheType.POPULAR_KEYWORDS.getTtl())
+                        CacheType.NAME_LIST_POPULAR_KEYWORDS, // "popularKeywords"
+                        defaultConfig.entryTtl(CacheType.LIST_POPULAR_KEYWORDS.getTtl())
                 )
                 .withCacheConfiguration(
                         CacheType.NAME_MOVIE_SEARCH_CURRENT_POPULAR, // "movieSearchCurrentPopular"
@@ -41,6 +41,18 @@ public class CacheConfig {
                 .withCacheConfiguration(
                         CacheType.NAME_MOVIE_SEARCH_PREV_POPULAR, // "movieSearchPrevPopular"
                         defaultConfig.entryTtl(CacheType.MOVIE_SEARCH_PREV_POPULAR.getTtl())
+                )
+                .withCacheConfiguration(
+                        CacheType.NAME_LIST_DAILY_TOP_10_MOVIES,
+                        defaultConfig.entryTtl(CacheType.LIST_DAILY_TOP_10_MOVIES.getTtl())
+                )
+                .withCacheConfiguration(
+                        CacheType.NAME_LIST_WEEKLY_TOP_10_MOVIES,
+                        defaultConfig.entryTtl(CacheType.LIST_WEEKLY_TOP_10_MOVIES.getTtl())
+                )
+                .withCacheConfiguration(
+                        CacheType.NAME_MOVIE_DETAILS_TOP_10,
+                        defaultConfig.entryTtl(CacheType.MOVIE_DETAILS_TOP_10.getTtl())
                 )
                 .build();
     }

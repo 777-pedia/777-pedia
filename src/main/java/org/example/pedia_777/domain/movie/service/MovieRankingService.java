@@ -54,7 +54,7 @@ public class MovieRankingService {
     }
 
     // 어제 TOP 10 영화 ID 목록을 조회
-    @Cacheable(cacheNames = CacheType.NAME_DAILY_TOP_10_MOVIES,
+    @Cacheable(cacheNames = CacheType.NAME_LIST_DAILY_TOP_10_MOVIES,
             key = "'daily:' + T(java.time.LocalDate).now().minusDays(1)")
     public List<MovieRankResponse> getDailyTop10() {
 
@@ -65,7 +65,7 @@ public class MovieRankingService {
 
 
     // 지난주 TOP 10 영화 ID 목록 조회
-    @Cacheable(cacheNames = CacheType.NAME_WEEKLY_TOP_10_MOVIES,
+    @Cacheable(cacheNames = CacheType.NAME_LIST_WEEKLY_TOP_10_MOVIES,
             key = "'weekly:' + #root.target.getWeeklyKey(T(java.time.LocalDate).now().minusWeeks(1))")
     public List<MovieRankResponse> getWeeklyTop10() {
 
