@@ -46,7 +46,7 @@ public class MovieRankingService {
 
         // 오늘 날짜의 일간/주간 Sorted Set에 모두 점수 추가
         redisTemplate.opsForZSet().incrementScore(dailyKey, String.valueOf(movieId), score);
-        redisTemplate.opsForZSet().incrementScore(getWeeklyKey(today), String.valueOf(movieId), score);
+        redisTemplate.opsForZSet().incrementScore(weeklyKey, String.valueOf(movieId), score);
 
         redisTemplate.expire(dailyKey, Duration.ofHours(26));
         redisTemplate.expire(weeklyKey, Duration.ofDays(8));
