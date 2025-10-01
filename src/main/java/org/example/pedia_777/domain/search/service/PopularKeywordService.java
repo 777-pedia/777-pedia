@@ -1,5 +1,7 @@
 package org.example.pedia_777.domain.search.service;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -13,10 +15,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.pedia_777.common.config.CacheType;
 import org.example.pedia_777.domain.search.dto.response.PopularKeywordResponse;
+import org.example.pedia_777.domain.search.entity.PopularKeyword;
 import org.example.pedia_777.domain.search.entity.PopularType;
+import org.example.pedia_777.domain.search.repository.PopularKeywordRepository;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,13 +31,14 @@ public class PopularKeywordService {
 
     private static final String KEY_PREFIX = "popularKeywords:";  // Sorted Set의 Key
     private final RedisTemplate<String, String> redisTemplate;
-
+    private final PopularKeywordRepository dailyPopularKeywordRepository;
 
     // ZINCRBY을 이용하여 검색어의 점수를 1 증가시킴, 검색 함수에 사용
     public void incrementSearchKeyword(String keyword) {
 
         String currentKey = getCurrentHourKey();
         redisTemplate.opsForZSet().incrementScore(currentKey, keyword, 1);
+        redisTemplate.expire(currentKey, Duration.ofHours(26));
     }
 
     // 이전 시간대(정각 ~ 정각 사이)의 인기 검색어 10개 조회
@@ -87,5 +94,44 @@ public class PopularKeywordService {
                 .truncatedTo(ChronoUnit.HOURS)
                 .minusHours(1)
                 .format(DateTimeFormatter.ofPattern("yyyyMMddHH"));
+    }
+
+    // 어제 인기 검색어 데이터 백업
+    @Transactional
+    public void backupDailyPopularKeywords(LocalDate targetDate) {
+
+        log.info("[backupDailyPopularKeywords] '{}' 인기 검색어 데이터 백업 시작", targetDate);
+
+        // 어제 모든 시간대 키 목록 생성
+        List<String> sourceKeys = IntStream.range(0, 24)
+                .mapToObj(hour -> String.format("popularKeywords:%s%02d",
+                        targetDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")), hour))
+                .collect(Collectors.toList());
+
+        // ZUNIONSTORE를 사용하여 하나의 임시 키 생성
+        String destinationKey = "popularKeywords:daily_summary:" + targetDate;
+        redisTemplate.opsForZSet().unionAndStore(null, sourceKeys, destinationKey);
+
+        // 합산된 결과에서 Top 100 조회
+        Set<TypedTuple<String>> topKeywordsWithScores = redisTemplate.opsForZSet()
+                .reverseRangeWithScores(destinationKey, 0, 99);
+
+        if (topKeywordsWithScores == null || topKeywordsWithScores.isEmpty()) {
+
+            log.warn("[backupDailyPopularKeywords] 백업할 데이터가 없습니다.");
+            redisTemplate.delete(destinationKey); // 임시 키 삭제
+            return;
+        }
+
+        List<PopularKeyword> backupData = new ArrayList<>();
+        int rank = 1;
+        for (TypedTuple<String> tuple : topKeywordsWithScores) {
+            backupData.add(PopularKeyword.of(targetDate, rank++, tuple.getValue(), tuple.getScore()));
+        }
+
+        dailyPopularKeywordRepository.saveAll(backupData);
+        redisTemplate.expire(destinationKey, Duration.ofDays(1));
+
+        log.info("[backupDailyPopularKeywords] '{}' 인기 검색어 데이터 {}건 백업 완료.", targetDate, backupData.size());
     }
 }

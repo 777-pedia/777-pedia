@@ -1,5 +1,6 @@
 package org.example.pedia_777.domain.movie.service;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
@@ -13,30 +14,42 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.pedia_777.common.config.CacheType;
 import org.example.pedia_777.domain.movie.dto.MovieRankResponse;
 import org.example.pedia_777.domain.movie.entity.Movie;
+import org.example.pedia_777.domain.movie.entity.MovieRanking;
+import org.example.pedia_777.domain.movie.entity.RankingPeriod;
+import org.example.pedia_777.domain.movie.repository.MovieRankingRepository;
 import org.example.pedia_777.domain.movie.repository.MovieRepository;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MovieRankingService {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final MovieRepository movieRepository;
-
+    private final MovieRankingRepository movieRankingRepository;
 
     // 인기도 점수 증가 (리뷰 1점, 좋아용 0.5점)
     public void addMovieScore(Long movieId, double score) {
 
         LocalDate today = LocalDate.now();
+        String dailyKey = getDailyKey(today);
+        String weeklyKey = getWeeklyKey(today);
 
         // 오늘 날짜의 일간/주간 Sorted Set에 모두 점수 추가
-        redisTemplate.opsForZSet().incrementScore(getDailyKey(today), String.valueOf(movieId), score);
-        redisTemplate.opsForZSet().incrementScore(getWeeklyKey(today), String.valueOf(movieId), score);
+        redisTemplate.opsForZSet().incrementScore(dailyKey, String.valueOf(movieId), score);
+        redisTemplate.opsForZSet().incrementScore(weeklyKey, String.valueOf(movieId), score);
+
+        redisTemplate.expire(dailyKey, Duration.ofHours(26));
+        redisTemplate.expire(weeklyKey, Duration.ofDays(8));
     }
 
     // "movie_scores:daily:20250930"
@@ -115,5 +128,51 @@ public class MovieRankingService {
         String lastWeeksKey = getWeeklyKey(LocalDate.now().minusWeeks(1));
         Long rank = redisTemplate.opsForZSet().reverseRank(lastWeeksKey, String.valueOf(movieId));
         return rank != null && rank < 10;
+    }
+
+    // 특정 기간(일간/주간)의 영화 랭킹 백업
+    @Transactional
+    public void backupMovieRankings(LocalDate targetDate, RankingPeriod period) {
+
+        String sourceKey;
+        LocalDate rankingDate;
+
+        // 랭킹 종류에 따라 Redis 키와 저장될 날짜 결정
+        switch (period) {
+            case DAILY -> {
+                sourceKey = getDailyKey(targetDate);
+                rankingDate = targetDate;
+            }
+            case WEEKLY -> {
+                sourceKey = getWeeklyKey(targetDate);
+                // 주간 랭킹은 해당 주의 시작일(월요일)을 기준으로 저장
+                rankingDate = targetDate.with(WeekFields.of(Locale.KOREA).dayOfWeek(), 1);
+            }
+            default -> {
+                log.error("지원하지 않는 랭킹 주기입니다: {}", period);
+                return;
+            }
+        }
+
+        log.info("[backupMovieRankings] '{}' 랭킹 데이터 백업 시작 (Redis Key: {})", period, sourceKey);
+
+        // sorted set에서 Top 100 데이터 조회, 서비스는 Top 10이지만 내부 자료는 100까지 보관
+        Set<TypedTuple<String>> topMovies = redisTemplate.opsForZSet()
+                .reverseRangeWithScores(sourceKey, 0, 99);
+
+        if (topMovies == null || topMovies.isEmpty()) {
+            log.warn("[backupMovieRankings] 백업할 데이터가 없습니다.");
+            return;
+        }
+
+        List<MovieRanking> backupData = new ArrayList<>();
+        int rank = 1;
+        for (TypedTuple<String> tuple : topMovies) {
+            backupData.add(
+                    MovieRanking.of(period, rankingDate, rank++, Long.valueOf(tuple.getValue()), tuple.getScore()));
+        }
+
+        movieRankingRepository.saveAll(backupData);
+        log.info("[backupMovieRankings] {} 랭킹 데이터 {}건 백업 완료.", period, backupData.size());
     }
 }
