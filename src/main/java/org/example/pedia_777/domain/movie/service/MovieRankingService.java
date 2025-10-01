@@ -48,7 +48,7 @@ public class MovieRankingService {
         redisTemplate.opsForZSet().incrementScore(dailyKey, String.valueOf(movieId), score);
         redisTemplate.opsForZSet().incrementScore(weeklyKey, String.valueOf(movieId), score);
 
-        redisTemplate.expire(dailyKey, Duration.ofHours(26));
+        redisTemplate.expire(dailyKey, Duration.ofHours(48));
         redisTemplate.expire(weeklyKey, Duration.ofDays(8));
     }
 

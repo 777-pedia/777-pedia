@@ -38,7 +38,7 @@ public class PopularKeywordService {
 
         String currentKey = getCurrentHourKey();
         redisTemplate.opsForZSet().incrementScore(currentKey, keyword, 1);
-        redisTemplate.expire(currentKey, Duration.ofHours(26));
+        redisTemplate.expire(currentKey, Duration.ofHours(48));
     }
 
     // 이전 시간대(정각 ~ 정각 사이)의 인기 검색어 10개 조회
