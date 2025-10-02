@@ -442,9 +442,9 @@
 
 - **Remote Cache 를 위한 다양한 라이브러리(Memcached 등) 들이 있을텐데 그 중에서 Redis 를 선택한 이유가 무엇일까?**
     - 인기 검색어, Top 10 등 랭킹의 의미를 가지는 문제를 구현하는데 효율적
-        - SortedSet(ZSET) 자료구조를 이용하면 원자적 연산을 하는 ZINCBY(incremnetScore) 명령어로 해결이 가능함 무려, 자료구조만 사용해도 해결이 가능함!!
+        - SortedSet(ZSET) 자료구조를 이용하면 원자적 연산을 하는 ZINCRBY(incrementScore) 명령어로 해결이 가능함 무려, 자료구조만 사용해도 해결이 가능함!!
             - 특정 항목의 점수를 올리고, 자동으로 재정렬이 매우 빠르게 처리됨
-        - Reddison같은 라이브러리를 이용하면 분산 락을 쉽고 안정적으로 구현할 수 있음
+        - Redisson같은 라이브러리를 이용하면 분산 락을 쉽고 안정적으로 구현할 수 있음
         - 데이터 백업을 위한 옵션 존재
 - **Redis Cache 에 데이터를 저장할 때 사용한 자료구조는 무엇이고, 다양한 자료구조중에 해당 자료구조를 선택한 이유는 무엇일까?**
     
@@ -632,8 +632,8 @@
 
 | 이름 | 역할 | Github |
 | --- | --- | --- |
-| **이영래** | Favorite, 동시성 제어 | [https://velog.io/@isp1229/posts](https://velog.io/@isp1229/posts) |
-| **박수현** | Like, 동시성 제어 | [https://velog.io/@sooh59599/posts](https://velog.io/@sooh59599/posts) |
-| **장태욱** | Review, 동시성 제어 | [https://dinga87.tistory.com/](https://dinga87.tistory.com/) |
-| **김민지** | Member, Auth, 동시성 제어 | [https://mingstory-tech.tistory.com/](https://mingstory-tech.tistory.com/) |
-| **김필선** | Search, Movie, 캐시 | [https://seonrizee.github.io/](https://seonrizee.github.io/) |
+| **이영래** | Favorite, 동시성 제어 | [https://github.com/youngrae0317](https://github.com/youngrae0317) |
+| **박수현** | Like, 동시성 제어 | [https://github.com/soo59599](https://github.com/soo59599) |
+| **장태욱** | Review, 동시성 제어 | [https://github.com/doldollee00](https://github.com/doldollee00) |
+| **김민지** | Member, Auth, 동시성 제어 | [https://github.com/lby9906](https://github.com/lby9906) |
+| **김필선** | Search, Movie, 캐시 | [https://github.com/seonrizee/](https://github.com/seonrizee) |
