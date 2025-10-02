@@ -5,23 +5,25 @@
 <!-- TOC -->
 
 - [777 Pedia](#777-pedia)
-    - [1. 프로젝트 개요](#1-프로젝트-개요)
-    - [2. ERD](#2-erd)
-    - [3. 핵심 기능 설계 및 트러블 슈팅](#3-핵심-기능-설계-및-트러블-슈팅)
-        - [3.1. 캐싱(Caching)](#31-캐싱caching)
-        - [3.2. 최적화(Indexing)](#32-최적화indexing)
-        - [3.3. 동시성 제어(Concurrency Control)](#33-동시성-제어concurrency-control)
-    - [4. 캐시 과제 요구 사항 작성 내역](#4-캐시-과제-요구-사항-작성-내역)
-        - [4.1. 필수 구현 기능](#41-필수-구현-기능)
-        - [4.2. 선택 구현 기능](#42-선택-구현-기능)
-        - [3. 심화 구현 기능](#3-심화-구현-기능)
-    - [5. 주요 기능 및 API](#5-주요-기능-및-api)
-        - [5.1. API 목록](#51-api-목록)
-        - [5.2. Redis 백업 스케줄러](#52-redis-백업-스케줄러)
-    - [6. 시연 영상](#6-시연-영상)
-    - [7. 개발 환경](#7-개발-환경)
-    - [8. Git 그라운드 룰](#8-git-그라운드-룰)
-    - [9. 팀원](#9-팀원)
+  - [1. 프로젝트 개요](#1-프로젝트-개요)
+  - [2. ERD](#2-erd)
+  - [3. 핵심 기능 설계 및 트러블 슈팅](#3-핵심-기능-설계-및-트러블-슈팅)
+    - [3.1. 캐싱(Caching)](#31-캐싱caching)
+    - [3.2. 최적화(Indexing)](#32-최적화indexing)
+    - [3.3. 동시성 제어(Concurrency Control)](#33-동시성-제어concurrency-control)
+  - [4. 캐시 과제 요구 사항 작성 내역](#4-캐시-과제-요구-사항-작성-내역)
+    - [4.1. 필수 구현 기능](#41-필수-구현-기능)
+    - [4.2. 선택 구현 기능](#42-선택-구현-기능)
+    - [**1. Sorted Set**](#1-sorted-set)
+    - [2. String](#2-string)
+    - [3. 심화 구현 기능](#3-심화-구현-기능)
+  - [5. 주요 기능 및 API](#5-주요-기능-및-api)
+    - [5.1. API 목록](#51-api-목록)
+    - [5.2. Redis 백업 스케줄러](#52-redis-백업-스케줄러)
+  - [6. 시연 영상](#6-시연-영상)
+  - [7. 개발 환경](#7-개발-환경)
+  - [8. Git 그라운드 룰](#8-git-그라운드-룰)
+  - [9. 팀원](#9-팀원)
 
 <!-- /TOC -->
 
@@ -58,7 +60,7 @@
       ![image.png](docs//img/image_0.png)
 
       | 데이터 종류 | Redis Key 형식 | Value (멤버) | Score (점수) | 핵심 역할 | expired |
-              | --- | --- | --- | --- | --- | --- |
+      | --- | --- | --- | --- | --- | --- |
       | **실시간 인기 검색어 집계** | popularKeywords:{yyyyMMddHH} | 검색 키워드 (예: "영웅", 마동석, 봉준호 등) | 검색 API의 Request Parameter로 사용되어 호출되면 +1 | 시간 단위로 어떤 단어가 얼마나 많이 검색되었는지 실시간으로 집계합니다. | 48시간 |
       | **실시간 영화 랭킹 집계** | movie_scores:daily:{yyyyMMdd}/  <br>movie_scores:weekly:{yyyy_Www} | 영화 ID (예: "101") | 인기도 점수  <br>(리뷰 추가+1, 좋아요 추가+0.5) | 일간/주간 단위로 어떤 영화의 인기도 점수가 가장 높은지 실시간으로 집계합니다. | 48시간/8일 |
         - 매일 새벽 4시에 실시간 인기 검색어와 일간 영화 Top 10, 매주 월요일 새벽 4시에 주간 영화 Top 10은 `@Scheduled`을 가 있는 메서드를 통해 RDBMS로의 백업이 이뤄지도록
@@ -190,7 +192,7 @@
             - `EXPLAIN SELECT * FROM favorite WHERE member_id = 18 AND movie_id = 1;`
 
           | id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |
-                      | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+          | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
           | 1 | SIMPLE | favorite |  | ref | FK5w3q9ljpthkixo71hetx3ired,FK728jcsp8okxo8km8tly6q8lku | FK728jcsp8okxo8km8tly6q8lku | 9 | const | 5 | 2.06 | Using where |
             - type: ref (인덱스 사용)
             - key: `FK728jcsp8okxo8km8tly6q8lku` (movie_id)  옵티마이저가 인덱스 자동 선택
@@ -204,7 +206,7 @@
             - `EXPLAIN SELECT * FROM favorite WHERE member_id = 18 AND movie_id = 1;`
 
           | id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |
-                      | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+          | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
           | 1 | SIMPLE | favorite |  | ref | FK728jcsp8okxo8km8tly6q8lku,idx_favorite_member_movie | idx_favorite_member_movie | 18 | const,const | 1 | 100 |  |
             - type: ref (인덱스 사용)
             - key: `idx_favorite_member_movie` (복합 인덱스 사용)
@@ -256,7 +258,7 @@
             - `EXPLAIN SELECT * FROM favorite WHERE member_id = 18 ORDER BY created_at DESC;`
 
           | id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |
-                      | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+          | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
           | 1 | SIMPLE | favorite |  | ref | idx_favorite_member_movie | idx_favorite_member_movie | 9 | const | 9246 | 100 | Using filesort |
             - type: ref (member_id 외래 키 인덱스 사용)
             - key: `idx_favorite_member_movie` (member_id)
@@ -273,7 +275,7 @@
             - `EXPLAIN SELECT * FROM favorite WHERE member_id = 18 ORDER BY created_at DESC;`
 
           | id | select_type | table | partitions | type | possible_keys | key | key_len | ref | rows | filtered | Extra |
-                      | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+          | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
           | 1 | SIMPLE | favorite |  | ref | idx_favorite_member_movie,idx_favorite_member_created_at | idx_favorite_member_created_at | 9 | const | 9246 | 100 |  |
             - key: `idx_favorite_member_created_at` (WHERE과 ORDER BY 를 지원하는 인덱스)
             - Extra: null (Using filesort 제거)
@@ -298,7 +300,7 @@
     - **테스트 결과**
 
   | 단계 | 적용된 기술 및 전략 | 평균 실행 시간 | 성능 변화 (Baseline 대비) |
-      | --- | --- | --- | --- |
+  | --- | --- | --- | --- |
   | **A. Baseline** | `JOIN` + `GROUP BY` + `%LIKE%` + `ORDER BY` | **2478.4 ms** | - |
   | **B. 구조 변경** | **서브쿼리** + `%LIKE%` + `ORDER BY` | **720.0 ms** | **약 3.4배 향상** |
   | **C. 구조 변경 + 인덱스** | 서브쿼리 + `%LIKE%` + `ORDER BY` + **`release_date` 인덱스** | **368.7 ms** | **약 6.7배 향상** |
@@ -446,7 +448,7 @@
 
 - **왜 검색 API 에 Cache 를 적용했는지 스스로 꼭!! 고민하고 Readme 작성.**
     - 반복적인 DB 조회가 많이 일어나는 부분에 Cache를 적용하여 응답 속도는 향상시키고, DB 부하는 감소시키는 효과를 얻기 위해서 적용했습니다.
-    - 캐시별 적용 이유는 [**여기**](https://www.notion.so/README-md-27f255060e6780c8a570e7da480b9993?pvs=21)를 참조하세요.
+    - 캐시별 적용 이유는 [**3.1 캐싱**](#31-캐싱caching)의 API별 캐싱 전략 및 효과 정리를 참조하세요.
 
 ### 4.2. 선택 구현 기능
 
@@ -492,7 +494,7 @@
           관리할 수 있다.
 
       | 구분 | RDBMS (SQL) | NoSQL |
-              | --- | --- | --- |
+      | --- | --- | --- |
       | 데이터 구조 | 엄격한 스키마 (테이블) | 유연한 스키마 (Key-Value, Document 등) |
       | 핵심 가치 | 데이터 정합성, 안정성 | 성능, 확장성, 유연성 |
       | 확장 방식 | 주로 스케일 업 (수직 확장) | 주로 스케일 아웃 (수평 확장) |
