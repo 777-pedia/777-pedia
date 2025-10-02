@@ -1,0 +1,41 @@
+name: Assign Random Reviewer
+
+on:
+  pull_request:
+    types: [ opened, reopened, ready_for_review ]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign random reviewer
+        run: |
+          # 현재 PR 작성자
+          actor="${{ github.actor }}"
+
+          # 리뷰어 후보 (GitHub 아이디 사용)
+          reviewers=("doldollee00" "lby9906" "seonrizee" "youngrae0317" "soo59599")
+
+          # 작성자는 제외
+          candidates=($(printf "%s\n" "${reviewers[@]}" | grep -v "$actor"))
+
+          # 랜덤으로 1명 선택
+          selected=$(printf "%s\n" "${candidates[@]}" | shuf -n 1)
+
+          # JSON 배열 형태로 변환
+          reviewers_json=$(printf '%s\n' "$selected" | jq -R . | jq -s .)
+
+          # GitHub API 호출 → 리뷰어 지정
+          curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d "{ \"reviewers\": $reviewers_json }" \
+            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers"
+          echo "Assigned reviewer: $selected"
+
+      - name: Allow merge even if selected reviewer doesn't approve
+        run: |
+          echo "Branch protection settings must allow merge from anyone"
